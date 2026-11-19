@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Révision DS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap" rel="stylesheet">
+<style>
+/* Plan : cahier à carreaux. Stylo bleu (accent), surligneur jaune, vert/rouge pour juste/faux.
+   Mise en page : une colonne étroite, grandes zones tactiles, cartes posées sur le quadrillage. */
+:root{
+  --paper:#f2f6fc; --grid:#dce5f2; --surface:#ffffff; --ink:#13203b; --muted:#56678a;
+  --accent:#1d4ed8; --accent-ink:#ffffff; --accent-soft:#e3ebff;
+  --hl:#ffe27a; --hl-ink:#3a2f00;
+  --good:#12703f; --good-bg:#e2f4ea; --bad:#b0302b; --bad-bg:#fcebe8;
+  --line:#cdd7e8; --shadow:0 1px 0 rgba(19,32,59,.06), 0 6px 18px -10px rgba(19,32,59,.25);
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1526; --grid:#1a2540; --surface:#162038; --ink:#e8edf8; --muted:#9fb0cf;
+    --accent:#86a8ff; --accent-ink:#0b1226; --accent-soft:#1f2d52;
+    --hl:#7a6516; --hl-ink:#fff4c2;
+    --good:#5fd39b; --good-bg:#143428; --bad:#ff8f87; --bad-bg:#3a1c1b;
+    --line:#2a3858; --shadow:0 1px 0 rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1526; --grid:#1a2540; --surface:#162038; --ink:#e8edf8; --muted:#9fb0cf;
+  --accent:#86a8ff; --accent-ink:#0b1226; --accent-soft:#1f2d52;
+  --hl:#7a6516; --hl-ink:#fff4c2;
+  --good:#5fd39b; --good-bg:#143428; --bad:#ff8f87; --bad-bg:#3a1c1b;
+  --line:#2a3858; --shadow:0 1px 0 rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px; color:var(--ink); font-family:var(--body); font-size:18px; line-height:1.5;
+}
+button,input,select{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 56px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;background:none;border:0;cursor:pointer;padding:6px 2px;letter-spacing:-.01em}
+mark{background:var(--hl);color:var(--hl-ink);padding:0 .22em;border-radius:3px;box-decoration-break:clone}
+.crumbs{font-size:15px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.crumbs button{background:none;border:0;padding:4px 0;cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.eyebrow{margin:0 0 8px;font-size:15px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.hero{padding:20px 0 8px}
+.hero h1{font-size:clamp(40px,9vw,64px);font-weight:800;letter-spacing:-.02em}
+.lede{margin:12px 0 0;max-width:46ch;font-size:20px}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.level{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:16px;text-align:left;cursor:pointer;box-shadow:4px 4px 0 var(--ink);display:flex;flex-direction:column;gap:6px;min-height:150px;transition:transform .12s, box-shadow .12s}
+.level:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.level .big{font-family:var(--display);font-weight:800;font-size:56px;line-height:1}
+.level .big sup{font-size:.4em;vertical-align:top;position:relative;top:.15em}
+.level .sub{font-size:15px;color:var(--muted)}
+.level.soon{border-style:dashed;box-shadow:none;background:transparent}
+.level.soon:hover{transform:none;box-shadow:none}
+.level.open{border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)}
+.level.open:hover{box-shadow:6px 6px 0 var(--accent)}
+.pill{display:inline-block;font-size:13px;font-weight:700;padding:2px 10px;border-radius:999px;border:1.5px solid currentColor;align-self:flex-start}
+.pill.ok{color:var(--accent)} .pill.wait{color:var(--muted)}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+h2.title{font-size:clamp(30px,6vw,40px);font-weight:800;margin:14px 0 6px}
+.muted{color:var(--muted)}
+.setcard{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+.setcard h3{font-size:28px}
+.progress{height:10px;border-radius:99px;background:var(--accent-soft);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 20px;border-radius:12px;border:2px solid var(--ink);background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.ghost{background:var(--surface);color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+.link{background:none;border:0;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+.chaps{display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px}
+.chap{display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;align-items:center;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);text-align:left;cursor:pointer;width:100%}
+.chap:hover{border-color:var(--accent)}
+.chap .num{font-family:var(--display);font-weight:800;font-size:30px;background:var(--hl);color:var(--hl-ink);border-radius:10px;width:52px;height:52px;display:grid;place-items:center}
+.chap.all .num{background:var(--accent);color:var(--accent-ink)}
+.chap.err .num{background:var(--bad-bg);color:var(--bad)}
+.chap h3{font-size:21px}
+.chap .meta{font-size:15px;color:var(--muted)}
+.chap .progress{grid-column:2 / 4;height:7px}
+.chap .go{font-weight:700;color:var(--accent)}
+.chap[disabled]{opacity:.55;cursor:not-allowed}
+.opts{display:flex;flex-wrap:wrap;gap:12px 22px;margin-top:20px;align-items:center}
+.opts label{display:flex;gap:8px;align-items:center;cursor:pointer;min-height:40px}
+.opts input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent)}
+.opts select{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;min-height:44px}
+.reset{margin-top:22px;font-size:15px}
+/* quiz */
+.quizbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 8px;font-size:16px}
+.quizbar .count b{font-variant-numeric:tabular-nums}
+.score{font-weight:700;color:var(--good);font-variant-numeric:tabular-nums}
+.qcard{margin-top:14px;padding:20px 18px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.chip.kind{background:var(--hl);color:var(--hl-ink)}
+.prompt{font-size:21px;line-height:1.45;margin:0 0 16px}
+.prompt sup{font-size:.7em;line-height:0}
+.hat{position:relative;display:inline-block}
+.hat::before{content:"^";position:absolute;left:0;right:0;top:-.42em;text-align:center;font-size:.95em}
+figure.fig{margin:0 0 16px;background:var(--paper);border:1.5px dashed var(--line);border-radius:12px;padding:8px;text-align:center}
+figure.fig svg{max-width:100%;height:auto;max-height:240px}
+figure.fig figcaption{font-size:14px;color:var(--muted)}
+.fig .ln{stroke:var(--ink);stroke-width:2;fill:none}
+.fig .mk{stroke:var(--ink);stroke-width:1.6;fill:none}
+.fig .tx{fill:var(--ink);font:italic 16px var(--body)}
+.fig .nb circle{fill:var(--surface);stroke:var(--muted);stroke-width:1.5}
+.fig .nb text{fill:var(--ink);font:700 12px var(--body);text-anchor:middle;dominant-baseline:central}
+.fig .nb.hi circle{fill:var(--hl);stroke:var(--ink)}
+.fig .nb.hi text{fill:var(--hl-ink)}
+.choices{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:52px;width:100%}
+.opt:hover{border-color:var(--accent)}
+.opt .l{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;background:var(--accent-soft);color:var(--accent)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.right .l{background:var(--good);color:var(--surface)}
+.opt.wrong .l{background:var(--bad);color:var(--surface)}
+.opt[disabled]{cursor:default}
+.vf{grid-template-columns:1fr 1fr}
+.vf .opt{grid-template-columns:1fr;text-align:center;font-weight:700;font-size:20px}
+.field{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.field input[type=text]{flex:1 1 180px;min-width:0;min-height:54px;font-size:22px;padding:8px 14px;border-radius:12px;border:2px solid var(--ink);background:var(--surface);font-variant-numeric:tabular-nums}
+.field input[disabled]{opacity:.8}
+.field .unit{font-weight:700;color:var(--muted)}
+.keys{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.keys button{min-width:46px;min-height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-size:19px}
+.keys button:hover{border-color:var(--accent)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.fb{margin-top:18px;border-radius:12px;padding:14px 16px;border:2px solid}
+.fb.good{background:var(--good-bg);border-color:var(--good)}
+.fb.bad{background:var(--bad-bg);border-color:var(--bad)}
+.fb .h{font-weight:700;font-size:19px}
+.fb.good .h{color:var(--good)} .fb.bad .h{color:var(--bad)}
+.fb p{margin:6px 0 0}
+.fb .exp{background:var(--surface);border-radius:8px;padding:8px 12px;margin-top:10px;border-left:5px solid var(--hl)}
+.fb .exp::before{content:"Rappel du cours";display:block;font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+/* result */
+.result{margin-top:16px;text-align:center}
+.big-score{font-family:var(--display);font-weight:800;font-size:clamp(56px,16vw,92px);line-height:1;font-variant-numeric:tabular-nums}
+.big-score small{font-size:.4em;color:var(--muted)}
+.breakdown{display:grid;gap:12px;margin:22px 0;text-align:left}
+.breakdown .row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.breakdown .row .progress{grid-column:1 / 3}
+footer{margin-top:40px;font-size:14px;color:var(--muted)}
+@media (max-width:560px){
+  .levels{grid-template-columns:1fr}
+  .level{min-height:0;flex-direction:row;align-items:center;gap:16px}
+  .level .big{font-size:44px;min-width:76px}
+  .vf{grid-template-columns:1fr 1fr}
+  .prompt{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.sect{font-size:20px;margin:28px 0 -2px}
+.chapbox{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.chapbox .chap{width:100%}
+.coursbtn{font-size:16px;padding:8px 4px 4px 2px}
+.chap.timer .num{background:var(--accent-soft);color:var(--accent);font-size:26px}
+.clock{font-weight:700;font-variant-numeric:tabular-nums}
+.fig .gl{stroke:var(--line);stroke-width:1}
+.fig .pg{fill:var(--accent-soft);fill-opacity:.8;stroke:var(--ink);stroke-width:2}
+.fig .vc{stroke:var(--accent);stroke-width:3;fill:none}
+.fig .ahd{fill:var(--accent)}
+.fig .pt{fill:var(--ink)}
+.recap{margin-top:14px;padding:20px 18px}
+.recap h3{font-size:22px;margin:24px 0 8px}
+.recap h3:first-child{margin-top:0}
+.recap p{margin:8px 0}
+.recap sup{font-size:.7em;line-height:0}
+.recap .def{border-left:5px solid var(--hl);background:var(--paper);padding:8px 14px;border-radius:0 10px 10px 0}
+.recap .tb{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%;font-size:16px;margin:8px 0}
+.recap .tb th,.recap .tb td{border:1px solid var(--line);padding:4px 8px;text-align:center;font-variant-numeric:tabular-nums}
+.recap .tb th{text-align:left;background:var(--accent-soft);white-space:nowrap}
+.ticket{margin:18px auto 14px;max-width:420px;padding:18px 16px;border:2px dashed var(--ink);border-radius:16px;background:var(--hl);color:var(--hl-ink);text-align:center}
+.ticket .t1{font-family:var(--display);font-weight:800;font-size:22px}
+.ticket .t2{font-size:15px;margin-top:2px;opacity:.85}
+.ticket .big-score small{color:inherit;opacity:.7}
+.ticket .t3{font-weight:700;margin-top:4px}
+.field.who{max-width:420px;margin:0 auto}
+.note{margin:12px 0 0;padding:10px 14px;border-left:5px solid var(--hl);background:var(--surface);border-radius:0 10px 10px 0;font-size:16px}
+.namebox{max-width:none;margin:18px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <button class="brand" id="brand" aria-label="Retour à l’accueil">Révision <mark>DS</mark></button>
+    <nav class="crumbs" id="crumbs" aria-label="Fil d’Ariane"></nav>
+  </header>
+  <main id="app"></main>
+  
+</div>
+<script>
+var BANK5 = [
+/* ============ CHAPITRE 3 — PUISSANCES (34) ============ */
+// Cours (7)
+{ch:3,k:'Cours',t:'qcm',q:'Le <b>carré</b> d’un nombre <i>a</i> est…',c:['le produit de <i>a</i> par lui-même','le produit de <i>a</i> par 2','le double de <i>a</i>','la somme de <i>a</i> et de lui-même'],a:0,e:'Définition du cours : <i>a</i><sup>2</sup> = <i>a</i> × <i>a</i>. Par exemple 5<sup>2</sup> = 5 × 5 = 25.'},
+{ch:3,k:'Cours',t:'qcm',q:'Le <b>cube</b> d’un nombre <i>a</i> est…',c:['le produit de <i>a</i> par lui-même trois fois','le produit de <i>a</i> par 3','le triple de <i>a</i>','le produit de <i>a</i> par lui-même'],a:0,e:'Définition du cours : <i>a</i><sup>3</sup> = <i>a</i> × <i>a</i> × <i>a</i>. Par exemple 2<sup>3</sup> = 2 × 2 × 2 = 8.'},
+{ch:3,k:'Cours',t:'vf',q:'<i>a</i><sup>2</sup> = <i>a</i> × 2',a:false,e:'Faux. <i>a</i><sup>2</sup> = <i>a</i> × <i>a</i>. Par exemple 5<sup>2</sup> = 25, alors que 5 × 2 = 10.'},
+{ch:3,k:'Cours',t:'vf',q:'2<sup>3</sup> = 2 × 3',a:false,e:'Faux. 2<sup>3</sup> = 2 × 2 × 2 = 8, alors que 2 × 3 = 6.'},
+{ch:3,k:'Cours',t:'qcm',q:'<i>a</i><sup>2</sup> correspond à…',c:['l’aire d’un carré de côté <i>a</i>','le volume d’un cube d’arête <i>a</i>','le périmètre d’un carré de côté <i>a</i>','la longueur de la diagonale d’un carré de côté <i>a</i>'],a:0,e:'Lien avec la géométrie : <i>a</i><sup>2</sup> est l’aire d’un carré de côté <i>a</i>.'},
+{ch:3,k:'Cours',t:'qcm',q:'<i>a</i><sup>3</sup> correspond à…',c:['le volume d’un cube d’arête <i>a</i>','l’aire d’un carré de côté <i>a</i>','l’aire d’un cube d’arête <i>a</i>','le périmètre d’un carré de côté <i>a</i>'],a:0,e:'Lien avec la géométrie : <i>a</i><sup>3</sup> est le volume d’un cube d’arête <i>a</i>.'},
+{ch:3,k:'Cours',t:'qcm',q:'Qu’appelle-t-on un <b>carré parfait</b> ?',c:['un nombre qui est le carré d’un entier','un nombre pair','un nombre qui est le cube d’un entier','un nombre qui est le double d’un entier'],a:0,e:'Un carré parfait est le carré d’un entier : 36 = 6<sup>2</sup> est un carré parfait. (27 = 3<sup>3</sup> est un cube parfait.)'},
+// Calculs de carrés et de cubes (12)
+{ch:3,k:'Calcul',t:'num',q:'Calcule 6<sup>2</sup>.',a:36,calc:'6**2',e:'6<sup>2</sup> = 6 × 6 = 36.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 9<sup>2</sup>.',a:81,calc:'9**2',e:'9<sup>2</sup> = 9 × 9 = 81.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 12<sup>2</sup>.',a:144,calc:'12**2',e:'12<sup>2</sup> = 12 × 12 = 144 (à connaître par cœur : table des carrés jusqu’à 12).'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 7<sup>2</sup>.',a:49,calc:'7**2',e:'7<sup>2</sup> = 7 × 7 = 49.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 11<sup>2</sup>.',a:121,calc:'11**2',e:'11<sup>2</sup> = 11 × 11 = 121.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 8<sup>2</sup>.',a:64,calc:'8**2',e:'8<sup>2</sup> = 8 × 8 = 64.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 10<sup>2</sup>.',a:100,calc:'10**2',e:'10<sup>2</sup> = 10 × 10 = 100.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 2<sup>3</sup>.',a:8,calc:'2**3',e:'2<sup>3</sup> = 2 × 2 × 2 = 8. Attention : ce n’est pas 2 × 3.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 3<sup>3</sup>.',a:27,calc:'3**3',e:'3<sup>3</sup> = 3 × 3 × 3 = 27.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 4<sup>3</sup>.',a:64,calc:'4**3',e:'4<sup>3</sup> = 4 × 4 × 4 = 64.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 5<sup>3</sup>.',a:125,calc:'5**3',e:'5<sup>3</sup> = 5 × 5 × 5 = 125.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule 10<sup>3</sup>.',a:1000,calc:'10**3',e:'10<sup>3</sup> = 10 × 10 × 10 = 1 000.'},
+// Écrire sous la forme d'une puissance (7)
+{ch:3,k:'Calcul',t:'pow',q:'Écris 36 sous la forme d’un <b>carré</b>.',a:'6^2',show:'6<sup>2</sup>',e:'36 = 6 × 6 = 6<sup>2</sup> (36 est un carré parfait).'},
+{ch:3,k:'Calcul',t:'pow',q:'Écris 27 sous la forme d’un <b>cube</b>.',a:'3^3',show:'3<sup>3</sup>',e:'27 = 3 × 3 × 3 = 3<sup>3</sup> (27 est un cube parfait).'},
+{ch:3,k:'Calcul',t:'pow',q:'Écris 144 sous la forme d’un <b>carré</b>.',a:'12^2',show:'12<sup>2</sup>',e:'D’après la table des carrés, 144 = 12 × 12 = 12<sup>2</sup>.'},
+{ch:3,k:'Calcul',t:'pow',q:'Écris 125 sous la forme d’un <b>cube</b>.',a:'5^3',show:'5<sup>3</sup>',e:'125 = 5 × 5 × 5 = 5<sup>3</sup>.'},
+{ch:3,k:'Calcul',t:'pow',q:'Écris 81 sous la forme d’un <b>carré</b>.',a:'9^2',show:'9<sup>2</sup>',e:'D’après la table des carrés, 81 = 9 × 9 = 9<sup>2</sup>.'},
+{ch:3,k:'Calcul',t:'pow',q:'Écris 64 sous la forme d’un <b>carré</b>.',a:'8^2',show:'8<sup>2</sup>',e:'64 = 8 × 8 = 8<sup>2</sup>. (Et aussi 64 = 4 × 4 × 4 = 4<sup>3</sup>.)'},
+{ch:3,k:'Calcul',t:'pow',q:'Écris 64 sous la forme d’un <b>cube</b>.',a:'4^3',show:'4<sup>3</sup>',e:'64 = 4 × 4 × 4 = 4<sup>3</sup>. (Et aussi 64 = 8<sup>2</sup>.)'},
+// Priorités opératoires (6)
+{ch:3,k:'Calcul',t:'qcm',q:'Dans une expression <b>sans parenthèse</b>, dans quel ordre effectue-t-on les calculs ?',c:['les puissances, puis les × et ÷, puis les + et −','les × et ÷, puis les puissances, puis les + et −','les + et −, puis les puissances, puis les × et ÷','de gauche à droite, sans règle particulière'],a:0,e:'Règle du cours : 1) les puissances ; 2) les multiplications et divisions, de gauche à droite ; 3) les additions et soustractions, de gauche à droite.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule <i>A</i> = 3 + 2<sup>2</sup> × 5.',a:23,calc:'3+2**2*5',e:'<i>A</i> = 3 + 4 × 5 = 3 + 20 = 23.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule <i>B</i> = 5<sup>2</sup> − 3 × 4.',a:13,calc:'5**2-3*4',e:'<i>B</i> = 25 − 12 = 13.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule <i>C</i> = (7 − 4)<sup>2</sup> + 1.',a:10,calc:'(7-4)**2+1',e:'On commence par la parenthèse : <i>C</i> = 3<sup>2</sup> + 1 = 9 + 1 = 10.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule <i>D</i> = 4 × 3<sup>2</sup> − 2<sup>3</sup>.',a:28,calc:'4*3**2-2**3',e:'<i>D</i> = 4 × 9 − 8 = 36 − 8 = 28.'},
+{ch:3,k:'Calcul',t:'num',q:'Calcule <i>E</i> = 50 − 4<sup>2</sup> × 3.',a:2,calc:'50-4**2*3',e:'<i>E</i> = 50 − 16 × 3 = 50 − 48 = 2.'},
+// Problèmes (2)
+{ch:3,k:'Problème',t:'num',q:'Un carré a un côté de 9 cm. Quelle est son aire, en cm<sup>2</sup> ?',unit:'cm²',a:81,calc:'9**2',e:'L’aire d’un carré de côté <i>a</i> est <i>a</i><sup>2</sup> : 9<sup>2</sup> = 81 cm<sup>2</sup>.'},
+{ch:3,k:'Problème',t:'num',q:'Un cube a une arête de 5 cm. Quel est son volume, en cm<sup>3</sup> ?',unit:'cm³',a:125,calc:'5**3',e:'Le volume d’un cube d’arête <i>a</i> est <i>a</i><sup>3</sup> : 5<sup>3</sup> = 125 cm<sup>3</sup>.'},
+
+/* ============ CHAPITRE 4 — ANGLES (33) ============ */
+// Cours (10)
+{ch:4,k:'Cours',t:'qcm',q:'Deux angles sont <b>correspondants</b> lorsque…',c:['ils n’ont pas le même sommet, sont du même côté de la sécante, et l’un est entre (<i>d</i>) et (<i>d′</i>) alors que l’autre est à l’extérieur','ils ont le même sommet et sont opposés par le sommet','ils sont de part et d’autre de la sécante et tous les deux entre (<i>d</i>) et (<i>d′</i>)','leur somme vaut 180°'],a:0,e:'Définition du cours : pas le même sommet, du même côté de la sécante, l’un entre (<i>d</i>) et (<i>d′</i>), l’autre à l’extérieur.'},
+{ch:4,k:'Cours',t:'qcm',q:'Deux angles sont <b>alternes-internes</b> lorsque…',c:['ils n’ont pas le même sommet, sont de part et d’autre de la sécante, et sont tous les deux entre (<i>d</i>) et (<i>d′</i>)','ils n’ont pas le même sommet, sont du même côté de la sécante, l’un entre (<i>d</i>) et (<i>d′</i>) et l’autre à l’extérieur','ils ont le même sommet','ils sont tous les deux à l’extérieur de la bande délimitée par (<i>d</i>) et (<i>d′</i>)'],a:0,e:'Définition du cours : alternes (de part et d’autre de la sécante) et internes (entre les deux droites).'},
+{ch:4,k:'Cours',t:'num',q:'Avec deux droites et une sécante, combien y a-t-il de couples d’angles <b>correspondants</b> ?',a:4,calc:'4',e:'Remarque du cours : il existe quatre couples d’angles correspondants.'},
+{ch:4,k:'Cours',t:'num',q:'Avec deux droites et une sécante, combien y a-t-il de couples d’angles <b>alternes-internes</b> ?',a:2,calc:'2',e:'Il y a deux couples d’angles alternes-internes.'},
+{ch:4,k:'Cours',t:'qcm',q:'<b>Propriété directe.</b> Si deux droites sont parallèles et coupées par une sécante, alors les angles alternes-internes sont…',c:['de même mesure','supplémentaires (leur somme vaut 180°)','complémentaires (leur somme vaut 90°)','toujours droits'],a:0,e:'Propriété directe : deux droites parallèles coupées par une sécante forment des angles alternes-internes de même mesure.'},
+{ch:4,k:'Cours',t:'qcm',q:'<b>Propriété directe.</b> Si deux droites sont parallèles et coupées par une sécante, alors les angles correspondants sont…',c:['de même mesure','supplémentaires (leur somme vaut 180°)','complémentaires (leur somme vaut 90°)','toujours droits'],a:0,e:'Propriété directe : deux droites parallèles coupées par une sécante forment aussi des angles correspondants de même mesure.'},
+{ch:4,k:'Cours',t:'qcm',q:'<b>Propriété réciproque.</b> Si deux droites sont coupées par une sécante et forment des angles alternes-internes de même mesure, alors…',c:['ces deux droites sont parallèles','ces deux droites sont perpendiculaires','ces deux droites sont confondues','chacun de ces angles mesure 90°'],a:0,e:'Propriété réciproque : des angles alternes-internes (ou correspondants) de même mesure permettent de conclure que les droites sont parallèles.'},
+{ch:4,k:'Cours',t:'num',q:'Quelle est la somme des mesures des angles d’un triangle, en degrés ?',unit:'°',a:180,calc:'180',e:'Théorème du cours : la somme des mesures des angles d’un triangle vaut 180°.'},
+{ch:4,k:'Cours',t:'num',q:'Dans un triangle <b>équilatéral</b>, combien mesure chaque angle, en degrés ?',unit:'°',a:60,calc:'180/3',e:'Les trois angles sont égaux et leur somme vaut 180°, donc chacun mesure 180 : 3 = 60°.'},
+{ch:4,k:'Cours',t:'qcm',q:'Dans un triangle <b>isocèle</b>, les deux angles à la base sont…',c:['égaux','complémentaires','droits','égaux à 60°'],a:0,e:'Dans un triangle isocèle, les deux angles à la base sont égaux.'},
+// Reconnaître les angles sur la figure (7)
+{ch:4,k:'Figure',t:'qcm',fig:'gen',hi:[1,5],q:'Sur la figure, quel angle est <b>correspondant</b> à l’angle 1 ?',c:['l’angle 3','l’angle 5','l’angle 6','l’angle 8'],a:1,e:'Les angles 1 et 5 n’ont pas le même sommet, sont du même côté de la sécante, et l’un est entre les droites alors que l’autre est à l’extérieur.'},
+{ch:4,k:'Figure',t:'qcm',fig:'gen',hi:[4,8],q:'Sur la figure, quel angle est <b>correspondant</b> à l’angle 4 ?',c:['l’angle 2','l’angle 6','l’angle 7','l’angle 8'],a:3,e:'Les angles 4 et 8 sont du même côté de la sécante : l’angle 4 est entre les droites et l’angle 8 est à l’extérieur.'},
+{ch:4,k:'Figure',t:'qcm',fig:'gen',hi:[3,5],q:'Sur la figure, quel angle est <b>alterne-interne</b> à l’angle 3 ?',c:['l’angle 4','l’angle 5','l’angle 6','l’angle 7'],a:1,e:'Les angles 3 et 5 sont tous les deux entre les droites et de part et d’autre de la sécante.'},
+{ch:4,k:'Figure',t:'qcm',fig:'gen',hi:[4,6],q:'Sur la figure, quel angle est <b>alterne-interne</b> à l’angle 4 ?',c:['l’angle 5','l’angle 6','l’angle 7','l’angle 8'],a:1,e:'Les angles 4 et 6 sont tous les deux entre les droites et de part et d’autre de la sécante.'},
+{ch:4,k:'Figure',t:'qcm',fig:'gen',hi:[4,6],q:'Sur la figure, quel angle est <b>alterne-interne</b> à l’angle 6 ?',c:['l’angle 3','l’angle 4','l’angle 5','l’angle 8'],a:1,e:'Le second couple d’angles alternes-internes est formé des angles 4 et 6 (le premier : 3 et 5).'},
+{ch:4,k:'Figure',t:'vf',fig:'gen',hi:[3,5],q:'Les angles 3 et 5 sont alternes-internes.',a:true,e:'Vrai : ils sont entre les droites et de part et d’autre de la sécante.'},
+{ch:4,k:'Figure',t:'vf',fig:'gen',hi:[4,5],q:'Les angles 4 et 5 sont alternes-internes.',a:false,e:'Faux : ils sont tous les deux entre les droites, mais du <b>même</b> côté de la sécante. Pour être alternes-internes, il faut qu’ils soient de part et d’autre.'},
+// Mesures avec des droites parallèles (7)
+{ch:4,k:'Figure',t:'num',fig:'par',hi:[1,5],unit:'°',q:'Les droites (<i>d</i>) et (<i>d′</i>) sont <b>parallèles</b>. L’angle 1 mesure 65°. Combien mesure l’angle 5 ?',a:65,calc:'65',e:'Les angles 1 et 5 sont correspondants. Les droites sont parallèles, donc ils sont de même mesure : 65°.'},
+{ch:4,k:'Figure',t:'num',fig:'par',hi:[3,5],unit:'°',q:'Les droites (<i>d</i>) et (<i>d′</i>) sont <b>parallèles</b>. L’angle 3 mesure 110°. Combien mesure l’angle 5 ?',a:110,calc:'110',e:'Les angles 3 et 5 sont alternes-internes. Les droites sont parallèles, donc ils sont de même mesure : 110°.'},
+{ch:4,k:'Figure',t:'num',fig:'par',hi:[4,6],unit:'°',q:'Les droites (<i>d</i>) et (<i>d′</i>) sont <b>parallèles</b>. L’angle 4 mesure 70°. Combien mesure l’angle 6 ?',a:70,calc:'70',e:'Les angles 4 et 6 sont alternes-internes. Les droites sont parallèles, donc ils sont de même mesure : 70°.'},
+{ch:4,k:'Figure',t:'num',fig:'par',hi:[2,6],unit:'°',q:'Les droites (<i>d</i>) et (<i>d′</i>) sont <b>parallèles</b>. L’angle 2 mesure 115°. Combien mesure l’angle 6 ?',a:115,calc:'115',e:'Les angles 2 et 6 sont correspondants. Les droites sont parallèles, donc ils sont de même mesure : 115°.'},
+{ch:4,k:'Figure',t:'num',fig:'par',hi:[4,8],unit:'°',q:'Les droites (<i>d</i>) et (<i>d′</i>) sont <b>parallèles</b>. L’angle 8 mesure 48°. Combien mesure l’angle 4 ?',a:48,calc:'48',e:'Les angles 4 et 8 sont correspondants. Les droites sont parallèles, donc ils sont de même mesure : 48°.'},
+{ch:4,k:'Figure',t:'num',fig:'par',hi:[3,7],unit:'°',q:'Les droites (<i>d</i>) et (<i>d′</i>) sont <b>parallèles</b>. L’angle 7 mesure 125°. Combien mesure l’angle 3 ?',a:125,calc:'125',e:'Les angles 3 et 7 sont correspondants. Les droites sont parallèles, donc ils sont de même mesure : 125°.'},
+{ch:4,k:'Cours',t:'qcm',fig:'par',hi:[1,5],q:'Les droites (<i>d</i>) et (<i>d′</i>) sont parallèles et l’angle 1 mesure 70°. Pour justifier que l’angle 5 mesure aussi 70°, quelle phrase utilise-t-on ?',c:['Si deux droites parallèles sont coupées par une sécante, alors les angles correspondants sont de même mesure.','Si deux droites sont coupées par une sécante et forment des angles correspondants de même mesure, alors elles sont parallèles.','La somme des mesures des angles d’un triangle vaut 180°.','Si deux angles ont la même mesure, alors ils ont le même sommet.'],a:0,e:'On part du fait que les droites sont parallèles pour en déduire que les angles sont égaux : c’est la propriété <b>directe</b>.'},
+// Propriété réciproque (4)
+{ch:4,k:'Cours',t:'qcm',fig:'gen',hi:[1,5],q:'Les angles correspondants 1 et 5 mesurent tous les deux 72°. Que peut-on dire des droites (<i>d</i>) et (<i>d′</i>) ?',c:['Elles sont parallèles.','Elles sont perpendiculaires.','On ne peut rien dire.','Elles sont confondues.'],a:0,e:'Propriété réciproque : deux droites coupées par une sécante qui forment des angles correspondants de même mesure sont parallèles.'},
+{ch:4,k:'Cours',t:'qcm',fig:'gen',hi:[4,6],q:'Les angles alternes-internes 4 et 6 mesurent tous les deux 118°. Que peut-on dire des droites (<i>d</i>) et (<i>d′</i>) ?',c:['Elles sont parallèles.','Elles sont perpendiculaires.','Elles ne sont pas parallèles.','On ne peut rien dire.'],a:0,e:'Propriété réciproque : des angles alternes-internes de même mesure permettent de conclure que les droites sont parallèles.'},
+{ch:4,k:'Cours',t:'qcm',fig:'gen',hi:[1,5],q:'Les angles correspondants 1 et 5 mesurent 70° et 75°. Que peut-on dire des droites (<i>d</i>) et (<i>d′</i>) ?',c:['Elles ne sont pas parallèles, car les angles correspondants n’ont pas la même mesure.','Elles sont parallèles.','Elles sont perpendiculaires.','On ne peut rien dire.'],a:0,e:'Si les droites étaient parallèles, les angles correspondants auraient la même mesure. Ici 70° ≠ 75° : elles ne sont pas parallèles.'},
+{ch:4,k:'Cours',t:'qcm',fig:'gen',hi:[1,5],q:'Pour démontrer que (<i>d</i>) et (<i>d′</i>) sont parallèles, on sait que deux angles correspondants marqués sont de même mesure. Quelle phrase écrit-on après « D’après l’énoncé… » ?',c:['Or, si deux droites sont coupées par une sécante et forment des angles correspondants de même mesure, alors ces deux droites sont parallèles.','Or, si deux droites parallèles sont coupées par une sécante, alors les angles correspondants sont de même mesure.','Or, la somme des mesures des angles d’un triangle vaut 180°.','Or, deux droites parallèles ne se coupent jamais.'],a:0,e:'Pour démontrer un parallélisme à partir d’angles égaux, on utilise la propriété <b>réciproque</b> (angles égaux ⇒ droites parallèles).'},
+// Triangles (5)
+{ch:4,k:'Calcul',t:'num',unit:'°',q:'Dans le triangle <i>ABC</i>, <span class="hat">ABC</span> = 67° et <span class="hat">BAC</span> = 48°. Calcule <span class="hat">BCA</span>.',a:65,calc:'180-67-48',e:'La somme des angles d’un triangle vaut 180°, donc <span class="hat">BCA</span> = 180 − 67 − 48 = 65°.'},
+{ch:4,k:'Calcul',t:'num',unit:'°',q:'Dans le triangle <i>EFG</i>, <span class="hat">FEG</span> = 58° et <span class="hat">EFG</span> = 64°. Calcule <span class="hat">EGF</span>.',a:58,calc:'180-58-64',e:'La somme des angles d’un triangle vaut 180°, donc <span class="hat">EGF</span> = 180 − 58 − 64 = 58°.'},
+{ch:4,k:'Calcul',t:'num',unit:'°',q:'Dans le triangle <i>MNP</i>, <span class="hat">NMP</span> = 36° et <span class="hat">MNP</span> = 72°. Calcule <span class="hat">MPN</span>.',a:72,calc:'180-36-72',e:'<span class="hat">MPN</span> = 180 − 36 − 72 = 72°.'},
+{ch:4,k:'Cours',t:'qcm',q:'Un triangle <i>MNP</i> a trois angles : <span class="hat">NMP</span> = 36°, <span class="hat">MNP</span> = 72° et <span class="hat">MPN</span> = 72°. Ce triangle est…',c:['isocèle en <i>M</i>','isocèle en <i>N</i>','isocèle en <i>P</i>','équilatéral'],a:0,e:'Les angles en <i>N</i> et en <i>P</i> sont égaux (72°) : ce sont les angles à la base, donc le triangle est isocèle en <i>M</i>.'},
+{ch:4,k:'Calcul',t:'num',unit:'°',q:'Le triangle <i>EFG</i> est isocèle en <i>E</i> et <span class="hat">EFG</span> = 55°. Calcule <span class="hat">FEG</span>.',a:70,calc:'180-55-55',e:'Les angles à la base sont égaux : <span class="hat">EGF</span> = <span class="hat">EFG</span> = 55°. Donc <span class="hat">FEG</span> = 180 − 55 − 55 = 70°.'},
+
+/* ============ CHAPITRE 5 — CALCUL LITTÉRAL (1) (33) ============ */
+// Vocabulaire (6)
+{ch:5,k:'Cours',t:'qcm',q:'Une <b>expression littérale</b> est…',c:['une expression contenant des lettres qui désignent des nombres inconnus ou variables','une expression qui ne contient que des nombres','une égalité entre deux nombres','un calcul dont le résultat est toujours positif'],a:0,e:'Définition du cours : une expression littérale contient des lettres qui désignent des nombres inconnus ou variables. Exemple : l’aire d’un rectangle s’écrit <i>L</i> × <i>l</i>.'},
+{ch:5,k:'Cours',t:'qcm',q:'Quand peut-on masquer le signe × ?',c:['entre un nombre et une lettre, à condition d’écrire le nombre devant la lettre','entre deux nombres','entre une lettre et un nombre, avec la lettre écrite devant','jamais'],a:0,e:'Règle du cours : le signe × peut être masqué entre un nombre et une lettre (nombre devant), entre deux lettres, et devant une parenthèse.'},
+{ch:5,k:'Cours',t:'qcm',q:'Une <b>conjecture</b> est…',c:['une affirmation que l’on pense vraie mais que l’on n’a pas encore démontrée','une affirmation démontrée dans tous les cas','un exemple qui prouve qu’une affirmation est fausse','un calcul qui contient une lettre'],a:0,e:'Vocabulaire du cours : une conjecture est une affirmation que l’on pense vraie, mais pas encore démontrée.'},
+{ch:5,k:'Cours',t:'qcm',q:'Un <b>contre-exemple</b> est…',c:['un exemple particulier qui montre qu’une affirmation est fausse','un exemple qui prouve qu’une affirmation est toujours vraie','un calcul dont le résultat est 0','une valeur interdite pour la lettre'],a:0,e:'Vocabulaire du cours : un contre-exemple est un exemple particulier qui montre qu’une affirmation est fausse.'},
+{ch:5,k:'Cours',t:'vf',q:'Un seul contre-exemple suffit pour montrer qu’une égalité n’est pas toujours vraie.',a:true,e:'Vrai. Pour rejeter une affirmation, il suffit de trouver un seul exemple pour lequel elle est fausse.'},
+{ch:5,k:'Cours',t:'vf',q:'Si une égalité est vraie pour plusieurs valeurs testées, alors elle est démontrée.',a:false,e:'Faux. On peut seulement conjecturer qu’elle est vraie : pour la valider, il faut la démontrer dans tous les cas.'},
+// Mettre en expression (5)
+{ch:5,k:'Calcul',t:'expr',q:'Écris le <b>double</b> d’un nombre <i>x</i>.',a:'2x',show:'2<i>x</i>',e:'Le double de <i>x</i> s’écrit 2<i>x</i>.'},
+{ch:5,k:'Calcul',t:'expr',q:'Écris le <b>triple</b> d’un nombre <i>x</i>.',a:'3x',show:'3<i>x</i>',e:'Le triple de <i>x</i> s’écrit 3<i>x</i>.'},
+{ch:5,k:'Calcul',t:'expr',q:'Écris le <b>successeur</b> (le nombre suivant) d’un nombre <i>x</i>.',a:'x+1',show:'<i>x</i> + 1',e:'Le successeur de <i>x</i> s’écrit <i>x</i> + 1.'},
+{ch:5,k:'Calcul',t:'expr',q:'Écris le <b>périmètre</b> d’un carré de côté <i>c</i>.',a:'4c',show:'4 × <i>c</i> (ou 4<i>c</i>)',e:'Le périmètre d’un carré de côté <i>c</i> s’écrit 4 × <i>c</i>, soit 4<i>c</i>.'},
+{ch:5,k:'Calcul',t:'expr',q:'Écris l’<b>aire</b> d’un carré de côté <i>c</i>.',a:'c^2',show:'<i>c</i><sup>2</sup>',e:'L’aire d’un carré de côté <i>c</i> s’écrit <i>c</i><sup>2</sup>.'},
+// Programmes de calcul (3)
+{ch:5,k:'Calcul',t:'num',q:'Programme : « Choisir un nombre. Le multiplier par 9. Ajouter 5. » Quel résultat obtient-on si on choisit 3 ?',a:32,calc:'3*9+5',e:'3 × 9 = 27 puis 27 + 5 = 32.'},
+{ch:5,k:'Calcul',t:'expr',q:'Programme : « Choisir un nombre. Le multiplier par 9. Ajouter 5. » On choisit <i>x</i>. Écris l’expression littérale associée à ce programme.',a:'9x+5',show:'<i>x</i> × 9 + 5 (ou 9<i>x</i> + 5)',e:'On choisit <i>x</i>, on le multiplie par 9 : <i>x</i> × 9, puis on ajoute 5 : <i>x</i> × 9 + 5, soit 9<i>x</i> + 5.'},
+{ch:5,k:'Calcul',t:'expr',paren:true,accept:['3(x+4)'],soft:['(x+4)3'],note:'Correct ! On écrit plutôt le nombre devant la parenthèse : 3(<i>x</i> + 4).',q:'Programme : « Choisir un nombre. Lui ajouter 4. Multiplier le résultat par 3. » On choisit <i>x</i>. Écris l’expression littérale associée.',a:'3(x+4)',show:'3(<i>x</i> + 4)',e:'On ajoute 4 : <i>x</i> + 4. Puis on multiplie <b>le résultat</b> par 3 : il faut une parenthèse, 3(<i>x</i> + 4).'},
+// Simplifier l'écriture (6)
+{ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>A</i> = 7 × <i>x</i>.',a:'7x',show:'7<i>x</i>',e:'Le signe × peut être masqué entre un nombre et une lettre : <i>A</i> = 7<i>x</i>.'},
+{ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>B</i> = <i>y</i> × 4.',a:'4y',show:'4<i>y</i>',e:'Le nombre se place toujours devant la lettre : <i>B</i> = 4<i>y</i> (et non <i>y</i>4).'},
+{ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>C</i> = <i>a</i> × <i>b</i> × 3.',a:'3ab',show:'3<i>ab</i>',e:'On masque les signes × et on place le nombre devant les lettres : <i>C</i> = 3<i>ab</i>.'},
+{ch:5,k:'Calcul',t:'expr',strict:true,paren:true,accept:['6(x+1)'],q:'Simplifie l’écriture de <i>D</i> = 6 × (<i>x</i> + 1).',a:'6(x+1)',show:'6(<i>x</i> + 1)',e:'Le signe × peut être masqué devant une parenthèse : <i>D</i> = 6(<i>x</i> + 1).'},
+{ch:5,k:'Cours',t:'qcm',q:'Parmi ces écritures, laquelle est la bonne pour <i>x</i> × 5 ?',c:['5<i>x</i>','<i>x</i>5','<i>x</i> + 5','55<i>x</i>'],a:0,e:'Quand on simplifie <i>x</i> × 5, on n’écrit pas <i>x</i>5 mais 5<i>x</i> : le nombre est toujours placé devant la lettre.'},
+{ch:5,k:'Cours',t:'vf',q:'On peut écrire 5 × 2 sous la forme 52.',a:false,e:'Faux. Il s’agit de deux nombres : on ne peut pas masquer le signe × (52 est le nombre cinquante-deux).'},
+// Calculer la valeur d'une expression (5)
+{ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>E</i> = 2<i>x</i> + 1 pour <i>x</i> = 7.',a:15,calc:'2*7+1',e:'<i>E</i> = 2 × 7 + 1 = 14 + 1 = 15.'},
+{ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>F</i> = <i>a</i><sup>2</sup> + 3 pour <i>a</i> = 5.',a:28,calc:'5**2+3',e:'<i>F</i> = 5<sup>2</sup> + 3 = 25 + 3 = 28 (on calcule d’abord la puissance).'},
+{ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>G</i> = 3<i>x</i> − <i>x</i><sup>2</sup> pour <i>x</i> = 4.',a:-4,calc:'3*4-4**2',e:'<i>G</i> = 3 × 4 − 4<sup>2</sup> = 12 − 16 = −4.'},
+{ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>H</i> = 3<i>x</i> + 4 pour <i>x</i> = 5.',a:19,calc:'3*5+4',e:'<i>H</i> = 3 × 5 + 4 = 15 + 4 = 19.'},
+{ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>K</i> = 2(<i>x</i> + 3) pour <i>x</i> = 4.',a:14,calc:'2*(4+3)',e:'<i>K</i> = 2 × (4 + 3) = 2 × 7 = 14.'},
+// Tester une égalité (4)
+{ch:5,k:'Calcul',t:'num',q:'On teste l’égalité 2<i>x</i> + 3 = 2(<i>x</i> + 3) pour <i>x</i> = 4. Combien vaut 2<i>x</i> + 3 ?',a:11,calc:'2*4+3',e:'2 × 4 + 3 = 8 + 3 = 11.'},
+{ch:5,k:'Calcul',t:'num',q:'On teste l’égalité 2<i>x</i> + 3 = 2(<i>x</i> + 3) pour <i>x</i> = 4. Combien vaut 2(<i>x</i> + 3) ?',a:14,calc:'2*(4+3)',e:'2 × (4 + 3) = 2 × 7 = 14.'},
+{ch:5,k:'Cours',t:'qcm',q:'Pour <i>x</i> = 4, on obtient 11 d’un côté et 14 de l’autre. Que peut-on dire de l’égalité 2<i>x</i> + 3 = 2(<i>x</i> + 3) ?',c:['Elle est fausse : 4 est un contre-exemple.','Elle est vraie.','Elle est démontrée.','On ne peut rien conclure.'],a:0,e:'11 ≠ 14 : le nombre 4 est un contre-exemple, donc l’égalité est fausse.'},
+{ch:5,k:'Cours',t:'qcm',q:'On teste l’égalité <i>x</i><sup>2</sup> = 2<i>x</i>. Pour <i>x</i> = 2 : 4 = 4. Pour <i>x</i> = 3 : 9 ≠ 6. Que peut-on conclure ?',c:['L’égalité n’est pas toujours vraie : 3 est un contre-exemple.','L’égalité est toujours vraie.','L’égalité est vraie parce qu’elle est vraie pour <i>x</i> = 2.','Le nombre 3 est interdit.'],a:0,e:'Il ne suffit pas qu’une égalité soit vraie pour une valeur : ici <i>x</i> = 3 est un contre-exemple, donc l’égalité n’est pas toujours vraie.'},
+// Réduire une expression (4)
+{ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 6<i>x</i> + 9<i>x</i>.',a:'15x',show:'15<i>x</i>',e:'6<i>x</i> et 9<i>x</i> sont des termes semblables : 6<i>x</i> + 9<i>x</i> = (6 + 9)<i>x</i> = 15<i>x</i>.'},
+{ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 7<i>x</i> + 3 − 2<i>x</i> + 5.',a:'5x+8',show:'5<i>x</i> + 8',e:'On regroupe les termes en <i>x</i> : 7<i>x</i> − 2<i>x</i> = 5<i>x</i> ; et les nombres : 3 + 5 = 8. Résultat : 5<i>x</i> + 8.'},
+{ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 4<i>a</i> + 2<i>b</i> + 3<i>a</i> + <i>b</i>.',a:'7a+3b',show:'7<i>a</i> + 3<i>b</i>',e:'On regroupe les termes en <i>a</i> : 4<i>a</i> + 3<i>a</i> = 7<i>a</i> ; et les termes en <i>b</i> : 2<i>b</i> + <i>b</i> = 3<i>b</i>. Résultat : 7<i>a</i> + 3<i>b</i>.'},
+{ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 3<i>x</i> + <i>x</i><sup>2</sup> + 2<i>x</i> + 5<i>x</i><sup>2</sup>.',a:'6x^2+5x',show:'6<i>x</i><sup>2</sup> + 5<i>x</i>',e:'On ne regroupe que les termes semblables : 3<i>x</i> + 2<i>x</i> = 5<i>x</i> et <i>x</i><sup>2</sup> + 5<i>x</i><sup>2</sup> = 6<i>x</i><sup>2</sup>. Les termes en <i>x</i> et en <i>x</i><sup>2</sup> ne se regroupent pas.'},
+];
+
+var BANK4 = (function(){
+var Q = [];
+function add(o){ Q.push(o); }
+function pl(n,w){ return n>1 ? w+'x' : w; }
+function dirTxt(dx,dy){
+  var p = [];
+  if(dx) p.push(Math.abs(dx)+' carreau'+(Math.abs(dx)>1?'x':'')+' vers la '+(dx>0?'droite':'gauche'));
+  if(dy) p.push(Math.abs(dy)+' carreau'+(Math.abs(dy)>1?'x':'')+' vers '+(dy>0?'le haut':'le bas'));
+  return p.join(' et ');
+}
+
+/* ============ CHAPITRE 5 — CALCUL LITTÉRAL (1) (36) ============ */
+// Cours
+add({ch:5,k:'Cours',t:'qcm',q:'Une <b>expression littérale</b> est…',c:['une expression contenant des lettres (variables) qui désignent des nombres inconnus','une expression qui ne contient que des nombres','une égalité entre deux nombres','un calcul dont le résultat est toujours positif'],a:0,e:'Définition du cours : une expression littérale est une expression contenant des lettres (appelées variables) qui désignent des nombres inconnus.'});
+add({ch:5,k:'Cours',t:'qcm',q:'Le signe « × » peut être masqué…',c:['entre deux lettres, entre un nombre et une lettre (nombre devant) et devant une parenthèse','entre deux nombres','entre une lettre et un nombre, avec la lettre devant','jamais'],a:0,e:'Règle du cours : on masque le × entre deux lettres différentes, entre un nombre et une lettre (nombre placé devant) et devant une parenthèse.'});
+add({ch:5,k:'Cours',t:'vf',q:'On peut écrire 5 × 2 sous la forme 52.',a:false,e:'Faux. Il s’agit de deux nombres : on ne peut pas masquer le signe ×. (52 est le nombre cinquante-deux.)'});
+add({ch:5,k:'Cours',t:'qcm',q:'Quelle est la bonne écriture simplifiée de <i>x</i> × 5 ?',c:['5<i>x</i>','<i>x</i>5','<i>x</i> + 5','55<i>x</i>'],a:0,e:'Quand on simplifie <i>x</i> × 5, on n’écrit pas <i>x</i>5 mais 5<i>x</i> : le nombre est toujours placé devant la lettre.'});
+add({ch:5,k:'Cours',t:'vf',q:'On écrit <i>x</i> à la place de 1<i>x</i>.',a:true,e:'Vrai. Remarque du cours : on écrira <i>x</i> à la place de 1<i>x</i>.'});
+add({ch:5,k:'Cours',t:'qcm',q:'<i>a</i> × <i>a</i> × <i>a</i> se note…',c:['<i>a</i><sup>3</sup> (« <i>a</i> au cube »)','<i>a</i><sup>2</sup> (« <i>a</i> au carré »)','3<i>a</i>','<i>a</i> + 3'],a:0,e:'<i>a</i> × <i>a</i> se note <i>a</i><sup>2</sup> et <i>a</i> × <i>a</i> × <i>a</i> se note <i>a</i><sup>3</sup>.'});
+add({ch:5,k:'Cours',t:'vf',q:'5<sup>2</sup> = 5 × 2',a:false,e:'Faux. 5<sup>2</sup> = 5 × 5 = 25, alors que 5 × 2 = 10. De même 2<sup>3</sup> = 2 × 2 × 2 = 8 et non 2 × 3.'});
+add({ch:5,k:'Cours',t:'qcm',q:'Pour trois nombres <i>a</i>, <i>b</i> et <i>x</i>, on a <i>ax</i> + <i>bx</i> = …',c:['(<i>a</i> + <i>b</i>)<i>x</i>','<i>abx</i>','(<i>a</i> + <i>b</i>)<i>x</i><sup>2</sup>','<i>a</i> + <i>b</i> + <i>x</i>'],a:0,e:'Règle 1 du cours : <i>ax</i> + <i>bx</i> = (<i>a</i> + <i>b</i>)<i>x</i> et <i>ax</i> − <i>bx</i> = (<i>a</i> − <i>b</i>)<i>x</i>.'});
+// Programmes de calcul
+add({ch:5,k:'Calcul',t:'num',q:'Programme : « Choisir un nombre. Le multiplier par 9. Ajouter 5. » Quel résultat obtient-on si on choisit 3 ?',a:32,calc:'3*9+5',e:'3 × 9 = 27 puis 27 + 5 = 32.'});
+add({ch:5,k:'Calcul',t:'expr',q:'Même programme (« Choisir un nombre. Le multiplier par 9. Ajouter 5. »). On choisit <i>x</i>. Écris l’expression littérale associée.',a:'9x+5',show:'<i>x</i> × 9 + 5 (ou 9<i>x</i> + 5)',e:'On choisit <i>x</i>, on le multiplie par 9 : <i>x</i> × 9, puis on ajoute 5 : <i>x</i> × 9 + 5, soit 9<i>x</i> + 5.'});
+add({ch:5,k:'Calcul',t:'num',q:'Programme : « Choisir un nombre. Le multiplier par 4. Soustraire 7. » Quel résultat obtient-on si on choisit 5 ?',a:13,calc:'5*4-7',e:'5 × 4 = 20 puis 20 − 7 = 13.'});
+add({ch:5,k:'Calcul',t:'expr',q:'Même programme (« Choisir un nombre. Le multiplier par 4. Soustraire 7. »). On choisit <i>x</i>. Écris l’expression littérale associée.',a:'4x-7',show:'4<i>x</i> − 7',e:'On multiplie <i>x</i> par 4 : 4<i>x</i>, puis on soustrait 7 : 4<i>x</i> − 7.'});
+add({ch:5,k:'Calcul',t:'expr',paren:true,accept:['5(x+3)'],soft:['(x+3)5'],note:'Correct ! On écrit plutôt le nombre devant la parenthèse : 5(<i>x</i> + 3).',q:'Programme : « Choisir un nombre. Lui ajouter 3. Multiplier le résultat par 5. » On choisit <i>x</i>. Écris l’expression littérale associée.',a:'5(x+3)',show:'5(<i>x</i> + 3)',e:'On ajoute 3 : <i>x</i> + 3. Puis on multiplie <b>le résultat</b> par 5 : il faut une parenthèse, 5(<i>x</i> + 3).'});
+// Simplifier l'écriture
+add({ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>A</i> = 8 × <i>x</i>.',a:'8x',show:'8<i>x</i>',e:'Le signe × est masqué entre un nombre et une lettre : <i>A</i> = 8<i>x</i>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>B</i> = <i>y</i> × 6.',a:'6y',show:'6<i>y</i>',e:'Le nombre se place toujours devant la lettre : <i>B</i> = 6<i>y</i> (et non <i>y</i>6).'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>C</i> = <i>a</i> × <i>b</i> × 4.',a:'4ab',show:'4<i>ab</i>',e:'On masque les signes × et on place le nombre devant les lettres : <i>C</i> = 4<i>ab</i>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,paren:true,accept:['3(x+2)'],q:'Simplifie l’écriture de <i>D</i> = 3 × (<i>x</i> + 2).',a:'3(x+2)',show:'3(<i>x</i> + 2)',e:'Le signe × est masqué devant une parenthèse : <i>D</i> = 3(<i>x</i> + 2).'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>E</i> = <i>x</i> × <i>x</i> (utilise une puissance).',a:'x^2',show:'<i>x</i><sup>2</sup>',e:'<i>a</i> × <i>a</i> se note <i>a</i><sup>2</sup> : <i>E</i> = <i>x</i><sup>2</sup>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,q:'Simplifie l’écriture de <i>F</i> = 2 × <i>x</i> × <i>x</i>.',a:'2x^2',show:'2<i>x</i><sup>2</sup>',e:'<i>x</i> × <i>x</i> = <i>x</i><sup>2</sup>, donc <i>F</i> = 2<i>x</i><sup>2</sup>.'});
+// Valeur d'une expression
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de 2<i>x</i> + 1 pour <i>x</i> = 7.',a:15,calc:'2*7+1',e:'On remplace la lettre par la valeur proposée : 2 × 7 + 1 = 14 + 1 = 15.'});
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de 5<i>x</i> − 3 pour <i>x</i> = 4.',a:17,calc:'5*4-3',e:'5 × 4 − 3 = 20 − 3 = 17.'});
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>x</i><sup>2</sup> + 1 pour <i>x</i> = 6.',a:37,calc:'6**2+1',e:'6<sup>2</sup> + 1 = 36 + 1 = 37 (on calcule d’abord la puissance).'});
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de 3<i>x</i><sup>2</sup> − <i>x</i> pour <i>x</i> = −2.',a:14,calc:'3*(-2)**2-(-2)',e:'3 × (−2)<sup>2</sup> − (−2) = 3 × 4 + 2 = 12 + 2 = 14.'});
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de 2<i>x</i> + 3 pour <i>x</i> = −5.',a:-7,calc:'2*(-5)+3',e:'2 × (−5) + 3 = −10 + 3 = −7.'});
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de 4<i>a</i> − <i>b</i> pour <i>a</i> = 3 et <i>b</i> = 5.',a:7,calc:'4*3-5',e:'4 × 3 − 5 = 12 − 5 = 7.'});
+add({ch:5,k:'Calcul',t:'num',q:'Calcule la valeur de <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> pour <i>a</i> = 3 et <i>b</i> = 4.',a:25,calc:'3**2+4**2',e:'3<sup>2</sup> + 4<sup>2</sup> = 9 + 16 = 25.'});
+// Réduire : expressions numériques puis littérales
+add({ch:5,k:'Calcul',t:'num',q:'Calcule astucieusement <i>A</i> = 7,5 × 3 + 2,5 × 3.',a:30,calc:'(7.5+2.5)*3',e:'On factorise : <i>A</i> = (7,5 + 2,5) × 3 = 10 × 3 = 30.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression <i>B</i> = 12<i>x</i> − 7<i>x</i>.',a:'5x',show:'5<i>x</i>',e:'12<i>x</i> − 7<i>x</i> = (12 − 7)<i>x</i> = 5<i>x</i>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 6<i>x</i> + 9<i>x</i>.',a:'15x',show:'15<i>x</i>',e:'6<i>x</i> + 9<i>x</i> = (6 + 9)<i>x</i> = 15<i>x</i>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 7<i>x</i> + 3 − 2<i>x</i> + 5.',a:'5x+8',show:'5<i>x</i> + 8',e:'On regroupe les termes en <i>x</i> : 7<i>x</i> − 2<i>x</i> = 5<i>x</i> ; puis les nombres : 3 + 5 = 8. Résultat : 5<i>x</i> + 8.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 4<i>a</i> + 2<i>b</i> + 3<i>a</i> + <i>b</i>.',a:'7a+3b',show:'7<i>a</i> + 3<i>b</i>',e:'On regroupe les termes en <i>a</i> : 4<i>a</i> + 3<i>a</i> = 7<i>a</i> ; et les termes en <i>b</i> : 2<i>b</i> + <i>b</i> = 3<i>b</i>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 3<i>x</i> + <i>x</i><sup>2</sup> + 2<i>x</i> + 5<i>x</i><sup>2</sup>.',a:'6x^2+5x',show:'6<i>x</i><sup>2</sup> + 5<i>x</i>',e:'On ne regroupe que les termes semblables : 3<i>x</i> + 2<i>x</i> = 5<i>x</i> et <i>x</i><sup>2</sup> + 5<i>x</i><sup>2</sup> = 6<i>x</i><sup>2</sup>.'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression <i>A</i> = 2<i>x</i> + 3<i>x</i><sup>2</sup> − <i>x</i> + 8 − 6<i>x</i><sup>2</sup> − 13.',a:'-3x^2+x-5',show:'−3<i>x</i><sup>2</sup> + <i>x</i> − 5',e:'Termes en <i>x</i><sup>2</sup> : 3 − 6 = −3. Termes en <i>x</i> : 2 − 1 = 1. Nombres : 8 − 13 = −5. Donc <i>A</i> = −3<i>x</i><sup>2</sup> + <i>x</i> − 5 (exemple du cours).'});
+add({ch:5,k:'Calcul',t:'expr',strict:true,reduced:true,q:'Réduis l’expression 5<i>y</i> − 8<i>y</i> + 2.',a:'-3y+2',show:'−3<i>y</i> + 2',e:'5<i>y</i> − 8<i>y</i> = (5 − 8)<i>y</i> = −3<i>y</i>. Donc l’expression vaut −3<i>y</i> + 2.'});
+// Tester une égalité
+add({ch:5,k:'Calcul',t:'num',q:'On teste l’égalité 2<i>x</i> + 1 = 5 + <i>x</i> pour <i>x</i> = 1. Combien vaut le membre de gauche 2<i>x</i> + 1 ?',a:3,calc:'2*1+1',e:'Membre de gauche : 2 × 1 + 1 = 2 + 1 = 3.'});
+add({ch:5,k:'Calcul',t:'num',q:'On teste l’égalité 2<i>x</i> + 1 = 5 + <i>x</i> pour <i>x</i> = 1. Combien vaut le membre de droite 5 + <i>x</i> ?',a:6,calc:'5+1',e:'Membre de droite : 5 + 1 = 6.'});
+add({ch:5,k:'Cours',t:'qcm',q:'Pour <i>x</i> = 1, on trouve 3 d’un côté et 6 de l’autre. Que conclut-on pour l’égalité 2<i>x</i> + 1 = 5 + <i>x</i> ?',c:['Elle est fausse pour <i>x</i> = 1.','Elle est vraie pour <i>x</i> = 1.','Elle est vraie pour tous les nombres.','On ne peut rien conclure.'],a:0,e:'Les deux membres ne sont pas égaux (3 ≠ 6) : l’égalité est fausse pour <i>x</i> = 1.'});
+
+/* ============ CHAPITRE 6 — TRANSLATION (34) ============ */
+add({ch:6,k:'Cours',t:'qcm',q:'La translation qui transforme <i>E</i> en <i>F</i> (translation de vecteur <i>EF</i>) est un glissement…',c:['selon la droite (<i>EF</i>), dans le sens de <i>E</i> vers <i>F</i>, d’une longueur égale à <i>EF</i>','selon la droite (<i>EF</i>), dans le sens de <i>F</i> vers <i>E</i>, d’une longueur égale à <i>EF</i>','perpendiculairement à (<i>EF</i>), d’une longueur égale à <i>EF</i>','autour du point <i>E</i>, d’un angle égal à <i>EF</i>'],a:0,e:'Définition du cours : un glissement selon la droite (<i>EF</i>), dans le sens de <i>E</i> vers <i>F</i>, d’une longueur égale à la distance <i>EF</i>.'});
+add({ch:6,k:'Cours',t:'qcm',q:'La translation de vecteur <i>EF</i> transforme le point <i>E</i> en…',c:['le point <i>F</i>','le point <i>E</i> lui-même','le milieu de [<i>EF</i>]','un point choisi au hasard'],a:0,e:'La translation qui transforme <i>E</i> en <i>F</i> : l’image de <i>E</i> est <i>F</i>.'});
+add({ch:6,k:'Cours',t:'qcm',q:'Pour définir une translation, il faut connaître…',c:['une direction, un sens et une longueur','seulement une longueur','seulement une direction','un centre et un angle'],a:0,e:'Une translation est définie par une direction (la droite), un sens (de <i>E</i> vers <i>F</i>) et une longueur (<i>EF</i>).'});
+add({ch:6,k:'Cours',t:'vf',q:'Si <i>D′</i> est l’image de <i>D</i> par la translation de vecteur <i>EF</i>, alors les vecteurs <i>EF</i> et <i>DD′</i> définissent la même translation.',a:true,e:'Vrai. Dans le cours, le polygone <i>A′B′C′D′</i> est l’image de <i>ABCD</i> par la translation de vecteur <i>EF</i> (ou <i>DD′</i>).'});
+add({ch:6,k:'Cours',t:'qcm',q:'Une <b>frise</b> est…',c:['un motif reproduit dans une seule direction par translation','un motif reproduit dans deux directions par des translations','un motif reproduit par symétrie uniquement','un polygone à six côtés'],a:0,e:'Définition du cours : une frise est constituée d’un motif reproduit dans une seule direction par translation.'});
+add({ch:6,k:'Cours',t:'qcm',q:'Un <b>pavage</b> est…',c:['un motif reproduit dans deux directions par des translations, qui recouvre parfaitement le plan (sans trou ni superposition)','un motif reproduit dans une seule direction','un ensemble de motifs qui se superposent','un quadrillage'],a:0,e:'Définition du cours : un pavage reproduit un motif dans deux directions par des translations et recouvre parfaitement le plan, sans « trou » et sans superposition.'});
+add({ch:6,k:'Cours',t:'vf',q:'Une frise est un motif reproduit dans deux directions.',a:false,e:'Faux. Une frise a <b>une seule</b> direction ; c’est un pavage qui en a deux.'});
+add({ch:6,k:'Propriétés',t:'qcm',q:'La translation conserve…',c:['l’alignement des points, les longueurs, les aires et les mesures des angles','uniquement les longueurs','les longueurs mais pas les angles','les angles mais pas les aires'],a:0,e:'Propriété du cours : la translation conserve l’alignement des points, les longueurs, les aires et les mesures d’angles.'});
+add({ch:6,k:'Propriétés',t:'num',unit:'cm',q:'Le segment [<i>AB</i>] mesure 5 cm. Quelle est la longueur, en cm, de son image [<i>A′B′</i>] par une translation ?',a:5,calc:'5',e:'La translation conserve les longueurs : <i>A′B′</i> = <i>AB</i> = 5 cm.'});
+add({ch:6,k:'Propriétés',t:'num',unit:'cm²',q:'Un triangle a une aire de 12 cm<sup>2</sup>. Quelle est l’aire, en cm<sup>2</sup>, de son image par une translation ?',a:12,calc:'12',e:'La translation conserve les aires : l’image a la même aire, 12 cm<sup>2</sup>.'});
+add({ch:6,k:'Propriétés',t:'num',unit:'°',q:'Un angle mesure 40°. Quelle est la mesure, en degrés, de son image par une translation ?',a:40,calc:'40',e:'La translation conserve les mesures d’angles : l’image mesure 40°.'});
+add({ch:6,k:'Propriétés',t:'num',unit:'cm',q:'Un triangle <i>ABC</i> a pour côtés 3 cm, 4 cm et 5 cm. Quel est le périmètre, en cm, de son image <i>A′B′C′</i> ?',a:12,calc:'3+4+5',e:'Les longueurs sont conservées : les côtés de <i>A′B′C′</i> mesurent aussi 3 cm, 4 cm et 5 cm. Périmètre : 3 + 4 + 5 = 12 cm.'});
+add({ch:6,k:'Propriétés',t:'num',unit:'cm²',q:'Un carré a un côté de 6 cm. Quelle est l’aire, en cm<sup>2</sup>, de son image par une translation ?',a:36,calc:'6**2',e:'L’aire du carré est 6<sup>2</sup> = 36 cm<sup>2</sup>. La translation conserve les aires : l’image a aussi une aire de 36 cm<sup>2</sup>.'});
+add({ch:6,k:'Propriétés',t:'vf',q:'Si les points <i>A</i>, <i>G</i> et <i>E</i> sont alignés, alors leurs images <i>A′</i>, <i>G′</i> et <i>E′</i> par une translation sont alignées.',a:true,e:'Vrai : la translation conserve l’alignement des points.'});
+add({ch:6,k:'Propriétés',t:'vf',q:'Une translation ne conserve pas les longueurs.',a:false,e:'Faux. La translation conserve les longueurs : une figure et son image sont « exactement la même » (même taille, même aire).'});
+add({ch:6,k:'Propriétés',t:'vf',q:'Un polygone et son image par une translation ont la même aire.',a:true,e:'Vrai : la translation conserve les aires.'});
+
+// --- figures sur quadrillage ---
+var SP = {
+ S1:{W:16,H:9,E:[1,1],F:[5,3],poly:{A:[6,3],B:[8,6],C:[10,3]}},
+ S2:{W:16,H:9,E:[10,2],F:[7,4],poly:{A:[7,6],B:[9,8],C:[11,6]}},
+ S3:{W:16,H:9,E:[2,6],F:[7,4],poly:{A:[4,3],B:[6,6],C:[8,3]}},
+ S4:{W:16,H:9,E:[8,8],F:[6,5],poly:{A:[7,4],B:[9,6],C:[11,4]}}
+};
+function vec(sp){ return [sp.F[0]-sp.E[0], sp.F[1]-sp.E[1]]; }
+function gOf(sp,cands,hi){ return {W:sp.W,H:sp.H,E:sp.E,F:sp.F,poly:sp.poly,c:cands}; }
+// vecteurs : droite/gauche, haut/bas (nombres)
+function numDir(sp,which){
+  var v = vec(sp), dx=v[0], dy=v[1];
+  var base = '<i>E</i> à <i>F</i>';
+  if(which==='x'){
+    add({ch:6,k:'Figure',t:'num',fig:'tr',g:gOf(sp,{}),hi:[],q:'Sur la figure, pour aller de '+base+', de combien de carreaux se déplace-t-on <b>vers la '+(dx>0?'droite':'gauche')+'</b> ?',a:Math.abs(dx),calc:String(Math.abs(dx)),e:'On compte les carreaux entre <i>E</i> et <i>F</i> horizontalement : '+Math.abs(dx)+' carreaux vers la '+(dx>0?'droite':'gauche')+'.'});
+  } else {
+    add({ch:6,k:'Figure',t:'num',fig:'tr',g:gOf(sp,{}),hi:[],q:'Sur la figure, pour aller de '+base+', de combien de carreaux se déplace-t-on <b>vers '+(dy>0?'le haut':'le bas')+'</b> ?',a:Math.abs(dy),calc:String(Math.abs(dy)),e:'On compte les carreaux entre <i>E</i> et <i>F</i> verticalement : '+Math.abs(dy)+' carreaux vers '+(dy>0?'le haut':'le bas')+'.'});
+  }
+}
+numDir(SP.S1,'x'); numDir(SP.S1,'y');
+numDir(SP.S2,'x'); numDir(SP.S2,'y');
+numDir(SP.S3,'x'); numDir(SP.S4,'y');
+// image d'un point
+function imgQ(sp,name,rot){
+  var v = vec(sp), dx=v[0], dy=v[1], P = sp.poly[name];
+  var list = [[P[0]+dx,P[1]+dy],[P[0]-dx,P[1]-dy],[P[0]+dx,P[1]-dy],[P[0]-dx,P[1]+dy]];
+  var ord = []; for(var i=0;i<4;i++) ord.push(list[(i+4-rot)%4]);
+  var L = ['P','Q','R','S'], cands = {};
+  ord.forEach(function(pt,i){ cands[L[i]] = pt; });
+  var a = rot % 4;
+  add({ch:6,k:'Figure',t:'qcm',noshuffle:true,fig:'tr',g:gOf(sp,cands),hi:[L[a]],
+    q:'Sur la figure, le point <i>'+name+'′</i> est l’image du point <i>'+name+'</i> par la translation de vecteur <i>EF</i>. Quel point est <i>'+name+'′</i> ?',
+    c:['Le point P','Le point Q','Le point R','Le point S'],a:a,
+    e:'Le vecteur <i>EF</i> correspond à un glissement de '+dirTxt(dx,dy)+'. Depuis <i>'+name+'</i>, on se décale de la même façon : on arrive au point <b>'+L[a]+'</b>.'});
+}
+imgQ(SP.S1,'B',0); imgQ(SP.S1,'A',2);
+imgQ(SP.S2,'A',1); imgQ(SP.S2,'C',3);
+imgQ(SP.S3,'B',2); imgQ(SP.S3,'C',0);
+imgQ(SP.S4,'B',3); imgQ(SP.S4,'A',1);
+// quel glissement
+function dirQ(sp){
+  var v = vec(sp), dx=v[0], dy=v[1];
+  var opts = [[dx,dy],[-dx,dy],[dx,-dy],[dy,dx]];
+  add({ch:6,k:'Figure',t:'qcm',fig:'tr',g:gOf(sp,{}),hi:[],q:'Sur la figure, quel glissement correspond à la translation qui transforme <i>E</i> en <i>F</i> ?',c:opts.map(function(o){return dirTxt(o[0],o[1]);}),a:0,e:'De <i>E</i> à <i>F</i>, on se déplace de '+dirTxt(dx,dy)+'. Chaque point de la figure glisse de la même façon.'});
+}
+dirQ(SP.S1); dirQ(SP.S2); dirQ(SP.S3); dirQ(SP.S4);
+
+/* ============ CHAPITRE 7 — RACINE CARRÉE (30) ============ */
+add({ch:7,k:'Cours',t:'qcm',q:'Le <b>carré</b> d’un nombre <i>a</i> est…',c:['le produit de <i>a</i> par lui-même : <i>a</i><sup>2</sup> = <i>a</i> × <i>a</i>','le double de <i>a</i>','le produit de <i>a</i> par 2','la somme de <i>a</i> et de lui-même'],a:0,e:'Définition du cours : le carré d’un nombre <i>a</i> est <i>a</i><sup>2</sup> = <i>a</i> × <i>a</i>. Par exemple 5<sup>2</sup> = 25.'});
+add({ch:7,k:'Cours',t:'qcm',q:'La <b>racine carrée</b> d’un nombre positif <i>a</i> est…',c:['le nombre positif dont le carré est égal à <i>a</i>','la moitié de <i>a</i>','le nombre dont le double est égal à <i>a</i>','le carré de <i>a</i>'],a:0,e:'Définition du cours : la racine carrée de <i>a</i>, notée √<i>a</i>, est le nombre positif dont le carré est égal à <i>a</i>.'});
+add({ch:7,k:'Cours',t:'vf',q:'La racine carrée de −5 existe.',a:false,e:'Faux. La racine carrée d’un nombre existe uniquement pour les nombres positifs : −5 &lt; 0.'});
+add({ch:7,k:'Cours',t:'qcm',q:'Un <b>carré parfait</b> est…',c:['le carré d’un nombre entier positif','un nombre pair','le double d’un nombre entier','un nombre dont la racine carrée est 2'],a:0,e:'Définition du cours : un carré parfait est le carré d’un nombre entier positif (0, 1, 4, 9, 16, 25, 36…).'});
+add({ch:7,k:'Cours',t:'vf',q:'Le nombre √11 est un nombre entier.',a:false,e:'Faux. 11 n’est pas un carré parfait : √11 vaut environ 3,32 (3<sup>2</sup> = 9 et 4<sup>2</sup> = 16 encadrent 11).'});
+[[4,2],[9,3],[16,4],[25,5],[36,6],[49,7],[64,8],[81,9],[100,10],[121,11],[144,12]].forEach(function(p){
+  add({ch:7,k:'Calcul',t:'num',q:'Calcule √'+p[0]+'.',a:p[1],calc:String(p[1]),e:'Comme '+p[1]+'<sup>2</sup> = '+p[0]+', alors √'+p[0]+' = '+p[1]+'.'});
+});
+add({ch:7,k:'Calcul',t:'num',q:'Quel est le nombre <b>positif</b> dont le carré est égal à 49 ?',a:7,calc:'7',e:'7<sup>2</sup> = 49, donc le nombre positif cherché est 7 (c’est √49).'});
+add({ch:7,k:'Calcul',t:'num',unit:'cm',q:'Un carré a une aire de 81 cm<sup>2</sup>. Quelle est la longueur de son côté, en cm ?',a:9,calc:'9',e:'Le côté <i>c</i> vérifie <i>c</i><sup>2</sup> = 81, donc <i>c</i> = √81 = 9 cm.'});
+add({ch:7,k:'Calcul',t:'num',q:'Calcule √(5<sup>2</sup>).',a:5,calc:'5',e:'Pour un nombre positif, √(<i>a</i><sup>2</sup>) = <i>a</i> : √(5<sup>2</sup>) = √25 = 5.'});
+add({ch:7,k:'Calcul',t:'num',q:'Calcule √16 + √9.',a:7,calc:'4+3',e:'√16 = 4 et √9 = 3, donc √16 + √9 = 4 + 3 = 7. (Attention : ce n’est pas √25.)'});
+add({ch:7,k:'Calcul',t:'num',q:'Calcule √81 − √36.',a:3,calc:'9-6',e:'√81 = 9 et √36 = 6, donc √81 − √36 = 9 − 6 = 3.'});
+add({ch:7,k:'Calcul',t:'num',q:'Calcule 3 + √49.',a:10,calc:'3+7',e:'√49 = 7, donc 3 + √49 = 3 + 7 = 10.'});
+add({ch:7,k:'Calcul',t:'num',q:'Calcule 2 × √64.',a:16,calc:'2*8',e:'√64 = 8, donc 2 × √64 = 2 × 8 = 16.'});
+add({ch:7,k:'Cours',t:'vf',q:'Le nombre 50 est un carré parfait.',a:false,e:'Faux. 7<sup>2</sup> = 49 et 8<sup>2</sup> = 64 : 50 n’est le carré d’aucun nombre entier.'});
+add({ch:7,k:'Cours',t:'qcm',q:'Lequel de ces nombres n’est <b>pas</b> un carré parfait ?',c:['50','36','81','121'],a:0,e:'36 = 6<sup>2</sup>, 81 = 9<sup>2</sup> et 121 = 11<sup>2</sup>. En revanche 7<sup>2</sup> = 49 et 8<sup>2</sup> = 64 : 50 n’est pas un carré parfait.'});
+add({ch:7,k:'Calcul',t:'qcm',q:'Entre quels nombres entiers consécutifs se trouve √7 ?',c:['2 et 3','3 et 4','1 et 2','7 et 8'],a:0,e:'On encadre 7 par deux carrés parfaits : 4 &lt; 7 &lt; 9, donc 2 &lt; √7 &lt; 3.'});
+add({ch:7,k:'Calcul',t:'qcm',q:'Entre quels nombres entiers consécutifs se trouve √20 ?',c:['4 et 5','3 et 4','5 et 6','2 et 3'],a:0,e:'16 &lt; 20 &lt; 25, donc 4 &lt; √20 &lt; 5.'});
+add({ch:7,k:'Calcul',t:'qcm',q:'Entre quels nombres entiers consécutifs se trouve √50 ?',c:['7 et 8','6 et 7','8 et 9','5 et 6'],a:0,e:'49 &lt; 50 &lt; 64, donc 7 &lt; √50 &lt; 8.'});
+add({ch:7,k:'Calcul',t:'qcm',q:'Entre quels nombres entiers consécutifs se trouve √30 ?',c:['5 et 6','4 et 5','6 et 7','3 et 4'],a:0,e:'25 &lt; 30 &lt; 36, donc 5 &lt; √30 &lt; 6.'});
+add({ch:7,k:'Calcul',t:'num',q:'On encadre √7 : 2 &lt; √7 &lt; … Quel est le nombre entier qui complète l’encadrement ?',a:3,calc:'3',e:'4 &lt; 7 &lt; 9 donc 2 &lt; √7 &lt; 3.'});
+return Q;
+})();
+
+var COURS = {
+ds2:{
+3:'<h3>Carré et cube</h3>'+
+'<p class="def"><i>a</i><sup>2</sup> = <i>a</i> × <i>a</i> (« <i>a</i> au carré ») et <i>a</i><sup>3</sup> = <i>a</i> × <i>a</i> × <i>a</i> (« <i>a</i> au cube »).</p>'+
+'<p>Exemples : 5<sup>2</sup> = 5 × 5 = 25 ; 2<sup>3</sup> = 2 × 2 × 2 = 8.<br><b>Attention :</b> 5<sup>2</sup> n’est pas 5 × 2, et 2<sup>3</sup> n’est pas 2 × 3.</p>'+
+'<p><i>a</i><sup>2</sup> est l’aire d’un carré de côté <i>a</i> ; <i>a</i><sup>3</sup> est le volume d’un cube d’arête <i>a</i>.</p>'+
+'<h3>Carrés à connaître</h3>'+
+'<table class="tb"><tr><th>Nombre</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr><tr><th>Son carré</th><td>0</td><td>1</td><td>4</td><td>9</td><td>16</td><td>25</td><td>36</td><td>49</td><td>64</td><td>81</td><td>100</td><td>121</td><td>144</td></tr></table>'+
+'<p>Cubes : 2<sup>3</sup> = 8 ; 3<sup>3</sup> = 27 ; 4<sup>3</sup> = 64 ; 5<sup>3</sup> = 125 ; 10<sup>3</sup> = 1 000.</p>'+
+'<h3>Écrire sous la forme d’une puissance</h3>'+
+'<p>36 = 6<sup>2</sup> ; 27 = 3<sup>3</sup> ; 64 = 8<sup>2</sup> = 4<sup>3</sup> ; 100 = 10<sup>2</sup> ; 81 = 9<sup>2</sup>.</p>'+
+'<h3>Priorités opératoires</h3>'+
+'<p class="def">On calcule d’abord les parenthèses, puis les <b>puissances</b>, puis les <b>multiplications et divisions</b>, enfin les <b>additions et soustractions</b> (de gauche à droite).</p>'+
+'<p><i>A</i> = 3 + 2<sup>2</sup> × 5 = 3 + 4 × 5 = 3 + 20 = 23<br><i>B</i> = 5<sup>2</sup> − 3 × 4 = 25 − 12 = 13<br><i>C</i> = (7 − 4)<sup>2</sup> + 1 = 3<sup>2</sup> + 1 = 10<br><i>D</i> = 4 × 3<sup>2</sup> − 2<sup>3</sup> = 36 − 8 = 28</p>',
+4:'<h3>Angles correspondants</h3>'+
+'<p class="def">Deux angles sont <b>correspondants</b> s’ils : 1) n’ont pas le même sommet ; 2) sont du même côté de la sécante ; 3) l’un est entre (<i>d</i>) et (<i>d′</i>), l’autre à l’extérieur. Il y a 4 couples d’angles correspondants.</p>'+
+'<h3>Angles alternes-internes</h3>'+
+'<p class="def">Deux angles sont <b>alternes-internes</b> s’ils : 1) n’ont pas le même sommet ; 2) sont de part et d’autre de la sécante ; 3) sont tous les deux entre (<i>d</i>) et (<i>d′</i>). Il y a 2 couples d’angles alternes-internes.</p>'+
+'<h3>Parallèles et angles</h3>'+
+'<p class="def"><b>Propriété directe.</b> Si deux droites parallèles sont coupées par une sécante, alors les angles alternes-internes (ou correspondants) sont de même mesure.</p>'+
+'<p class="def"><b>Propriété réciproque.</b> Si deux droites coupées par une sécante forment des angles alternes-internes (ou correspondants) de même mesure, alors ces deux droites sont parallèles.</p>'+
+'<h3>Triangles</h3>'+
+'<p class="def">La somme des mesures des angles d’un triangle est égale à <b>180°</b>.</p>'+
+'<p>Triangle isocèle : les deux angles à la base sont égaux. Triangle équilatéral : les trois angles mesurent 60°.</p>',
+5:'<h3>Expression littérale</h3>'+
+'<p class="def">Une expression littérale contient des lettres qui désignent des nombres inconnus ou variables. Exemple : l’aire d’un rectangle s’écrit <i>L</i> × <i>l</i>.</p>'+
+'<p>Formules à connaître : le double de <i>x</i> → 2<i>x</i> ; le triple → 3<i>x</i> ; le successeur → <i>x</i> + 1 ; périmètre d’un carré de côté <i>c</i> → 4 × <i>c</i> ; aire → <i>c</i><sup>2</sup>.</p>'+
+'<h3>Simplifier l’écriture</h3>'+
+'<p class="def">Le signe × peut être masqué entre un nombre et une lettre (le nombre devant), entre deux lettres, et devant une parenthèse : 3 × <i>x</i> = 3<i>x</i> ; 5 × (<i>x</i> + 2) = 5(<i>x</i> + 2).</p>'+
+'<p><i>x</i> × 5 s’écrit 5<i>x</i> (pas <i>x</i>5) ; 5 × 2 ne s’écrit pas 52.</p>'+
+'<h3>Valeur d’une expression</h3>'+
+'<p>On remplace la lettre par la valeur proposée puis on calcule. Exemple : 2<i>x</i> + 1 pour <i>x</i> = 7 : 2 × 7 + 1 = 15.</p>'+
+'<h3>Conjecture et contre-exemple</h3>'+
+'<p class="def">Une <b>conjecture</b> est une affirmation que l’on pense vraie mais qui n’est pas démontrée. Un <b>contre-exemple</b> est un exemple qui montre qu’une affirmation est fausse : un seul suffit.</p>'+
+'<p>Tester 2<i>x</i> + 3 = 2(<i>x</i> + 3) pour <i>x</i> = 4 : 11 ≠ 14, l’égalité est fausse.</p>'
+},
+ds3:{
+5:'<h3>Expression littérale</h3>'+
+'<p class="def">Une expression littérale est une expression contenant des lettres (variables) qui désignent des nombres inconnus.</p>'+
+'<p>Programme de calcul : « Choisir un nombre, le multiplier par 9, ajouter 5 ». On choisit <i>x</i> : <i>x</i> × 9 + 5. Pour <i>x</i> = 3 : 3 × 9 + 5 = 32.</p>'+
+'<h3>Simplifier l’écriture</h3>'+
+'<p class="def">Le signe × peut être masqué : entre deux lettres différentes, entre un nombre et une lettre (nombre devant), devant une parenthèse.</p>'+
+'<p><i>a</i> × <i>b</i> = <i>ab</i> ; 3 × <i>x</i> = 3<i>x</i> ; 5 × (<i>x</i> + 2) = 5(<i>x</i> + 2). On écrit 5<i>x</i> et non <i>x</i>5 ; on écrit <i>x</i> à la place de 1<i>x</i>. Et 5 × 2 ne s’écrit pas 52.</p>'+
+'<p><i>a</i> × <i>a</i> = <i>a</i><sup>2</sup> et <i>a</i> × <i>a</i> × <i>a</i> = <i>a</i><sup>3</sup>. Attention : 5<sup>2</sup> = 25 (pas 5 × 2).</p>'+
+'<h3>Réduire une expression</h3>'+
+'<p class="def"><i>ax</i> + <i>bx</i> = (<i>a</i> + <i>b</i>)<i>x</i> et <i>ax</i> − <i>bx</i> = (<i>a</i> − <i>b</i>)<i>x</i>.</p>'+
+'<p>Exemple : <i>A</i> = 2<i>x</i> + 3<i>x</i><sup>2</sup> − <i>x</i> + 8 − 6<i>x</i><sup>2</sup> − 13<br>= (3 − 6)<i>x</i><sup>2</sup> + (2 − 1)<i>x</i> + (8 − 13) = −3<i>x</i><sup>2</sup> + <i>x</i> − 5.<br>On ne regroupe que les termes « de la même famille » : les <i>x</i> avec les <i>x</i>, les <i>x</i><sup>2</sup> avec les <i>x</i><sup>2</sup>, les nombres entre eux.</p>'+
+'<h3>Valeur d’une expression</h3>'+
+'<p>On remplace la lettre par la valeur proposée et on calcule : 2<i>x</i> + 1 pour <i>x</i> = 7 donne 2 × 7 + 1 = 15.</p>'+
+'<h3>Tester une égalité</h3>'+
+'<p>2<i>x</i> + 1 = 5 + <i>x</i> pour <i>x</i> = 1 ? Gauche : 2 × 1 + 1 = 3. Droite : 5 + 1 = 6. Les deux membres ne sont pas égaux : l’égalité est fausse pour <i>x</i> = 1.</p>',
+6:'<h3>Translation</h3>'+
+'<p class="def">La translation qui transforme <i>E</i> en <i>F</i> (translation de vecteur <i>EF</i>) est le glissement selon la droite (<i>EF</i>), dans le sens de <i>E</i> vers <i>F</i>, d’une longueur égale à <i>EF</i>.</p>'+
+'<h3>Construire une image</h3>'+
+'<p>On lit le « glissement » sur le quadrillage (par exemple 10 carreaux vers la droite et 4 vers le haut depuis <i>E</i>), puis on repart de chaque sommet en reproduisant le même glissement. On relie ensuite les points obtenus.</p>'+
+'<h3>Propriétés</h3>'+
+'<p class="def">La translation conserve l’alignement des points, les longueurs, les aires et les mesures des angles.</p>'+
+'<p>La figure image est exactement la même que la figure de départ : même taille, même aire.</p>'+
+'<h3>Frises et pavages</h3>'+
+'<p class="def">Une <b>frise</b> est un motif reproduit dans <b>une seule direction</b> par translation. Un <b>pavage</b> est un motif reproduit dans <b>deux directions</b> par des translations et qui recouvre parfaitement le plan (sans trou, sans superposition).</p>',
+7:'<h3>Carré et racine carrée</h3>'+
+'<p class="def">Le carré d’un nombre <i>a</i> est <i>a</i><sup>2</sup> = <i>a</i> × <i>a</i>.<br>La <b>racine carrée</b> d’un nombre positif <i>a</i> est le nombre <b>positif</b> dont le carré est égal à <i>a</i>. Elle se note √<i>a</i>.</p>'+
+'<p>Exemples : √36 = 6 car 6<sup>2</sup> = 36 ; √11 est le nombre positif dont le carré est 11, il vaut environ 3,32.<br>On a √(<i>a</i><sup>2</sup>) = <i>a</i> lorsque <i>a</i> ⩾ 0.</p>'+
+'<p><b>Remarque :</b> la racine carrée n’existe que pour les nombres positifs. √(−5) n’existe pas.</p>'+
+'<h3>Carrés parfaits</h3>'+
+'<p class="def">Un carré parfait est le carré d’un nombre entier positif.</p>'+
+'<table class="tb"><tr><th>Nombre</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr><tr><th>Son carré</th><td>0</td><td>1</td><td>4</td><td>9</td><td>16</td><td>25</td><td>36</td><td>49</td><td>64</td><td>81</td><td>100</td><td>121</td><td>144</td></tr></table>'+
+'<h3>Encadrer une racine carrée</h3>'+
+'<p>Pour encadrer √7 par deux entiers : 1) on encadre 7 par deux carrés parfaits : 4 &lt; 7 &lt; 9 ; 2) on applique la racine carrée à chaque terme : 2 &lt; √7 &lt; 3.</p>'
+}
+};
+
+</script>
+<script>
+(function(){
+'use strict';
+var SERIES = {
+  ds2:{lv:'5e',short:'DS2',title:'Révision du DS2',sub:'Puissances · Angles · Calcul littéral (1)',date:'DS du 23 novembre 2026',bank:BANK5,cours:COURS.ds2,
+       ch:{3:{t:'Chapitre 3',n:'Puissances'},4:{t:'Chapitre 4',n:'Angles'},5:{t:'Chapitre 5',n:'Calcul littéral (1)'}}},
+  ds3:{lv:'4e',short:'DS3',title:'Révision du DS3',sub:'Calcul littéral (1) · Translation · Racine carrée',date:'DS du 30 novembre 2026',bank:BANK4,cours:COURS.ds3,
+       ch:{5:{t:'Chapitre 5',n:'Calcul littéral (1)'},6:{t:'Chapitre 6',n:'Translation'},7:{t:'Chapitre 7',n:'Racine carrée'}}}
+};
+var LEVELS = {'5e':['ds2'],'4e':['ds3']};
+Object.keys(SERIES).forEach(function(k){
+  var S = SERIES[k]; S.id = k; S.chs = Object.keys(S.ch).map(Number);
+  S.bank.forEach(function(q,i){ q.id = k+':'+(i+1); });
+});
+var KEY = 'revds.v2', NAMEKEY = 'revds.name';
+var FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdegtdLOJOZMXhLsPlP1fMECest-3Y-sro_eg1Z7YBBEMOGgQ/formResponse';
+var FORM_FIELDS = {name:'entry.1897961438', serie:'entry.875250908', score:'entry.1829719460'};
+function sendScore(name, serie, score){
+  try{
+    var body = new URLSearchParams();
+    body.append(FORM_FIELDS.name, name); body.append(FORM_FIELDS.serie, serie); body.append(FORM_FIELDS.score, score);
+    fetch(FORM_URL, {method:'POST', mode:'no-cors', body:body});
+  }catch(e){}
+}
+var store = {};
+function load(){ try{ store = JSON.parse(localStorage.getItem(KEY)||'{}') || {}; }catch(e){ store = {}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+function getName(){ try{ return localStorage.getItem(NAMEKEY)||''; }catch(e){ return ''; } }
+function setName(v){ try{ localStorage.setItem(NAMEKEY, v); }catch(e){} }
+load();
+
+var app = document.getElementById('app');
+var crumbs = document.getElementById('crumbs');
+var session = null, cur = SERIES.ds2, timer = null;
+var opts = {shuffle:true, len:0};
+var TIMED_N = 10, TIMED_SEC = 300;
+
+function fr(n){ return String(n).replace('-','−').replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function clearTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+function counts(S){
+  var c = {total:S.bank.length, ok:0, err:0, ch:{}};
+  S.chs.forEach(function(k){ c.ch[k]={n:0,ok:0,err:0}; });
+  S.bank.forEach(function(q){ var s=c.ch[q.ch]; s.n++; if(store[q.id]===1){s.ok++;c.ok++;} else if(store[q.id]===0){s.err++;c.err++;} });
+  return c;
+}
+function nav(name){ if(location.hash==='#'+name){ route(); } else { location.hash = name; } }
+
+/* ---------- vérification des réponses ---------- */
+function normNum(s){
+  s = String(s).toLowerCase().replace(/[\s  ]/g,'').replace(/[−–—]/g,'-').replace(',','.');
+  s = s.replace(/(°|cm[²³23]?|cm)$/,'');
+  return /^-?\d+(\.\d+)?$/.test(s) ? parseFloat(s) : NaN;
+}
+function normExpr(s){
+  return String(s).toLowerCase().replace(/[\s  ]/g,'').replace(/[×·]/g,'*').replace(/[−–—]/g,'-')
+    .replace(/²/g,'^2').replace(/³/g,'^3').replace(/,/g,'.');
+}
+function parsePoly(s){
+  if(!s || /[()]/.test(s)) return null;
+  var terms = s.match(/[+-]?[^+-]+/g);
+  if(!terms || terms.join('')!==s) return null;
+  var map = {}, dupe = false;
+  for(var i=0;i<terms.length;i++){
+    var t = terms[i], sign = 1;
+    if(t[0]==='+') t = t.slice(1); else if(t[0]==='-'){ sign=-1; t=t.slice(1); }
+    if(!t) return null;
+    var re = /(\d+(?:\.\d+)?)|([a-z])(?:\^(\d))?|\*/g, m, pos = 0, coef = 1, ex = {}, any = false;
+    while((m = re.exec(t))){
+      if(m.index!==pos) return null;
+      pos = re.lastIndex; any = true;
+      if(m[1]!==undefined) coef *= parseFloat(m[1]);
+      else if(m[2]!==undefined) ex[m[2]] = (ex[m[2]]||0) + (m[3]?+m[3]:1);
+    }
+    if(!any || pos!==t.length) return null;
+    var key = Object.keys(ex).sort().map(function(k){return k+'^'+ex[k];}).join('*');
+    if(key in map) dupe = true;
+    map[key] = (map[key]||0) + sign*coef;
+  }
+  return {map:map, dupe:dupe};
+}
+function samePoly(a,b){
+  var ka = Object.keys(a).filter(function(k){return Math.abs(a[k])>1e-12;}), kb = Object.keys(b).filter(function(k){return Math.abs(b[k])>1e-12;});
+  if(ka.length!==kb.length) return false;
+  return ka.every(function(k){ return Math.abs(a[k]-(b[k]||0))<1e-9; });
+}
+function check(q, raw){
+  if(q.t==='num'){
+    var v = normNum(raw);
+    if(isNaN(v)) return {ok:false, msg:'Écris un nombre (par exemple 36).'};
+    return {ok: Math.abs(v-q.a)<1e-9};
+  }
+  if(q.t==='pow'){
+    var p = String(raw).toLowerCase().replace(/[\s ]/g,'').replace(/²/g,'^2').replace(/³/g,'^3').replace('**','^');
+    return {ok: p===q.a};
+  }
+  if(q.t==='expr'){
+    var n = normExpr(raw);
+    if(!n) return {ok:false, msg:'Écris une expression.'};
+    var bare = n.replace(/\^\d/g,'');
+    if(/[a-z]\d/.test(bare)) return {ok:false, msg:'Attention : le nombre se place devant la lettre (5x et non x5).'};
+    if(/([a-z])\1/.test(bare)) return {ok:false, msg:'Utilise une puissance : x × x s’écrit x².'};
+    if(q.strict && n.indexOf('*')>=0) return {ok:false, msg:'Simplifie l’écriture : le signe × peut être masqué.'};
+    if(q.paren){
+      var m = n.replace(/\*/g,'');
+      if(q.accept.indexOf(m)>=0) return {ok:true};
+      if(q.soft && q.soft.indexOf(m)>=0) return {ok:true, note:q.note};
+      return {ok:false};
+    }
+    var a = parsePoly(n), b = parsePoly(normExpr(q.a));
+    if(!a || !b) return {ok:false};
+    if(!samePoly(a.map,b.map)) return {ok:false};
+    if(q.reduced && a.dupe) return {ok:false, msg:'Ton expression est juste, mais pas encore réduite : regroupe les termes semblables.'};
+    return {ok:true};
+  }
+  return {ok:false};
+}
+window.__check = check;
+
+/* ---------- figures ---------- */
+function figAngles(kind, hi){
+  hi = hi||[];
+  var par = kind==='par';
+  var A = {x:187,y:70}, B = {x:150,y:150};
+  var slope = par ? 0 : 0.07;
+  var yd2 = function(x){ return 150 + slope*(x-150); };
+  var off = {1:[22,-14],2:[-14,-22],3:[-22,14],4:[14,22]};
+  var nb = function(P,n,base){
+    var o = off[base];
+    var cls = hi.indexOf(n)>=0 ? 'nb hi' : 'nb';
+    return '<g class="'+cls+'"><circle cx="'+(P.x+o[0])+'" cy="'+(P.y+o[1])+'" r="10"/><text x="'+(P.x+o[0])+'" y="'+(P.y+o[1])+'">'+n+'</text></g>';
+  };
+  var s = '<svg viewBox="0 0 390 220" role="img" aria-label="Deux droites coupées par une sécante, avec huit angles numérotés de 1 à 8">';
+  s += '<line class="ln" x1="20" y1="70" x2="350" y2="70"/>';
+  s += '<line class="ln" x1="20" y1="'+yd2(20)+'" x2="350" y2="'+yd2(350)+'"/>';
+  s += '<line class="ln" x1="126.7" y1="200" x2="210.3" y2="20"/>';
+  if(par){
+    s += '<polyline class="mk" points="296,64 302,70 296,76"/><polyline class="mk" points="296,144 302,150 296,156"/>';
+  }
+  s += '<text class="tx" x="358" y="75">(d)</text><text class="tx" x="358" y="'+(yd2(350)+5)+'">(d′)</text><text class="tx" x="216" y="22">(s)</text>';
+  [1,2,3,4].forEach(function(i){ s += nb(A,i,i); });
+  [5,6,7,8].forEach(function(i){ s += nb(B,i,i-4); });
+  return s + '</svg>';
+}
+function figGrid(g, hi){
+  hi = hi||[];
+  var s = 24, pad = 12, W = g.W, H = g.H, w = W*s+2*pad, h = H*s+2*pad, i;
+  function X(x){ return pad + x*s; } function Y(y){ return pad + (H-y)*s; }
+  var o = '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Quadrillage avec le vecteur EF, le triangle ABC et des points proposés">';
+  o += '<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" class="ahd"/></marker></defs>';
+  for(i=0;i<=W;i++) o += '<line class="gl" x1="'+X(i)+'" y1="'+pad+'" x2="'+X(i)+'" y2="'+(h-pad)+'"/>';
+  for(i=0;i<=H;i++) o += '<line class="gl" x1="'+pad+'" y1="'+Y(i)+'" x2="'+(w-pad)+'" y2="'+Y(i)+'"/>';
+  var names = Object.keys(g.poly||{});
+  if(names.length){
+    o += '<polygon class="pg" points="'+names.map(function(n){ return X(g.poly[n][0])+','+Y(g.poly[n][1]); }).join(' ')+'"/>';
+  }
+  o += '<line class="vc" x1="'+X(g.E[0])+'" y1="'+Y(g.E[1])+'" x2="'+X(g.F[0])+'" y2="'+Y(g.F[1])+'" marker-end="url(#ah)"/>';
+  function dot(n,p,dx,dy){ return '<circle class="pt" cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="3.5"/><text class="tx" x="'+(X(p[0])+dx)+'" y="'+(Y(p[1])+dy)+'">'+n+'</text>'; }
+  names.forEach(function(n){ o += dot(n,g.poly[n],(n==='B'?-4:-14),(n==='B'?-9:14)); });
+  o += dot('E',g.E,-14,14) + dot('F',g.F,6,-6);
+  Object.keys(g.c||{}).forEach(function(L){
+    var p = g.c[L], on = hi.indexOf(L)>=0;
+    o += '<g class="'+(on?'nb hi':'nb')+'"><circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="10"/><text x="'+X(p[0])+'" y="'+Y(p[1])+'">'+L+'</text></g>';
+  });
+  return o + '</svg>';
+}
+function figure(q, hi){
+  return q.fig==='tr' ? figGrid(q.g, hi) : figAngles(q.fig, hi);
+}
+
+/* ---------- vues ---------- */
+function setCrumbs(list){
+  crumbs.innerHTML = list.map(function(c){
+    return c.go ? '<button data-go="'+c.go+'">'+c.t+'</button>' : '<span>'+c.t+'</span>';
+  }).join('<span aria-hidden="true">›</span>');
+  Array.prototype.forEach.call(crumbs.querySelectorAll('[data-go]'), function(b){ b.onclick = function(){ session=null; nav(b.getAttribute('data-go')); }; });
+}
+function bindGo(){
+  Array.prototype.forEach.call(app.querySelectorAll('[data-go]'), function(b){ b.onclick = function(){ nav(b.getAttribute('data-go')); }; });
+}
+function lvCrumbs(S, last){
+  var l = [{t:'Accueil',go:'accueil'},{t:S.lv,go:S.lv}];
+  if(last){ l.push({t:S.short,go:S.id}); l.push({t:last}); } else l.push({t:S.short});
+  return l;
+}
+function sup(lv){ return lv.charAt(0)+'<sup>e</sup>'; }
+function viewHome(){
+  setCrumbs([]);
+  var n5 = SERIES.ds2.bank.length, n4 = SERIES.ds3.bank.length;
+  app.innerHTML =
+    '<section class="hero"><p class="eyebrow">Par Madame Hechaichi</p><h1>Révision <mark>DS</mark></h1>'+
+    '<p class="lede">Choisis ta classe, puis ta série de questions. Réponds, vérifie avec le cours, recommence.</p></section>'+
+    '<div class="levels">'+
+    '<button class="level soon" data-go="6e"><span class="big">6<sup>e</sup></span><span><span class="pill wait">Bientôt</span><br><span class="sub">Séries à venir</span></span></button>'+
+    '<button class="level open" data-go="5e"><span class="big">5<sup>e</sup></span><span><span class="pill ok">Disponible</span><br><span class="sub">1 série · '+n5+' questions</span></span></button>'+
+    '<button class="level open" data-go="4e"><span class="big">4<sup>e</sup></span><span><span class="pill ok">Disponible</span><br><span class="sub">1 série · '+n4+' questions</span></span></button>'+
+    '</div>';
+  bindGo();
+}
+function viewSoon(lv){
+  setCrumbs([{t:'Accueil',go:'accueil'},{t:lv}]);
+  app.innerHTML = '<h2 class="title">'+sup(lv)+'</h2><div class="card" style="margin-top:14px"><p style="margin:0"><b>Les séries de révision de '+sup(lv)+' arrivent bientôt.</b></p></div><div class="actions"><button class="btn ghost" data-go="accueil">Retour à l’accueil</button></div>';
+  bindGo();
+}
+function viewLevel(lv){
+  setCrumbs([{t:'Accueil',go:'accueil'},{t:lv}]);
+  var html = '<h2 class="title">'+sup(lv)+' · Séries de révision</h2>';
+  LEVELS[lv].forEach(function(id){
+    var S = SERIES[id], c = counts(S);
+    html += '<div class="card setcard"><div><h3>'+S.title+'</h3><p class="muted" style="margin:6px 0 0">'+S.date+' · '+S.sub+'</p></div>'+
+      '<div><div class="progress" aria-hidden="true"><i style="width:'+(100*c.ok/c.total)+'%"></i></div><p class="muted" style="margin:6px 0 0;font-size:16px">'+c.ok+' réussies sur '+c.total+' questions</p></div>'+
+      '<div class="actions" style="margin:0"><button class="btn" data-go="'+id+'">Ouvrir la série</button></div></div>';
+  });
+  app.innerHTML = html; bindGo();
+}
+function viewSetup(){
+  var S = cur, c = counts(S);
+  setCrumbs([{t:'Accueil',go:'accueil'},{t:S.lv,go:S.lv},{t:S.short}]);
+  function tile(cls,num,title,meta,pct,id,dis,cours){
+    return '<div class="chapbox"><button class="chap '+cls+'" data-start="'+id+'"'+(dis?' disabled':'')+'><span class="num">'+num+'</span><span><h3>'+title+'</h3><span class="meta">'+meta+'</span></span><span class="go">'+(dis?'':'Jouer →')+'</span><span class="progress" aria-hidden="true"><i style="width:'+pct+'%"></i></span></button>'+
+      (cours?'<button class="link coursbtn" data-cours="'+cours+'">Revoir le cours</button>':'')+'</div>';
+  }
+  var html = '<h2 class="title">'+S.title+'</h2><p class="muted" style="margin:0">'+S.date+'. Choisis un chapitre, un mode de jeu ou toute la série.</p>'+
+    '<div class="field who namebox"><label for="nm" style="width:100%;font-weight:700">Ton prénom</label><input type="text" id="nm" maxlength="30" autocomplete="given-name" placeholder="Écris ton prénom pour commencer" value="'+getName().replace(/["<>&]/g,'')+'"></div><p class="muted" id="nmmsg" style="margin:6px 0 0;font-size:15px">Ton prénom apparaît sur ta carte de score.</p><p class="note">Tu n’es pas obligé de faire toutes les questions. Tu peux t’arrêter quand tu veux avec « Quitter » : ton score est calculé sur les questions auxquelles tu as répondu, et il est transmis à Madame Hechaichi.</p><div class="chaps">';
+  html += tile('all',S.bank.length,'Toute la série',S.chs.length+' chapitres · '+c.total+' questions',100*c.ok/c.total,'all');
+  S.chs.forEach(function(k){
+    var s = c.ch[k];
+    html += tile('',k,S.ch[k].n,s.n+' questions · '+s.ok+' réussies',100*s.ok/s.n,'ch'+k,false,k);
+  });
+  html += '</div><h3 class="sect">Autres modes</h3><div class="chaps">';
+  html += tile('timer','⏱','Contre la montre',TIMED_N+' questions au hasard en '+(TIMED_SEC/60)+' minutes',0,'timed');
+  html += tile('err','✗','Mes erreurs',c.err ? (c.err+' question'+(c.err>1?'s':'')+' à revoir') : 'Aucune erreur pour l’instant',100*c.err/c.total,'err',!c.err);
+  html += '</div>';
+  html += '<div class="opts"><label><input type="checkbox" id="o-shuffle"'+(opts.shuffle?' checked':'')+'> Mélanger les questions</label>'+
+    '<label>Longueur <select id="o-len"><option value="0"'+(opts.len===0?' selected':'')+'>Toutes</option><option value="10"'+(opts.len===10?' selected':'')+'>10 questions</option><option value="20"'+(opts.len===20?' selected':'')+'>20 questions</option></select></label></div>';
+  html += '<div class="reset"><button class="link" id="reset">Effacer ma progression</button></div>';
+  app.innerHTML = html;
+  document.getElementById('o-shuffle').onchange = function(e){ opts.shuffle = e.target.checked; };
+  document.getElementById('o-len').onchange = function(e){ opts.len = parseInt(e.target.value,10); };
+  var nmi = document.getElementById('nm');
+  nmi.oninput = function(){ setName(nmi.value.replace(/[<>&"]/g,'').trim()); document.getElementById('nmmsg').style.color=''; };
+  Array.prototype.forEach.call(app.querySelectorAll('[data-start]'), function(b){ b.onclick = function(){
+    if(!getName().trim()){ var m = document.getElementById('nmmsg'); m.textContent = 'Écris ton prénom avant de commencer.'; m.style.color = 'var(--bad)'; nmi.focus(); window.scrollTo(0,0); return; }
+    startQuiz(b.getAttribute('data-start')); }; });
+  Array.prototype.forEach.call(app.querySelectorAll('[data-cours]'), function(b){ b.onclick = function(){ nav(S.id+'c'+b.getAttribute('data-cours')); }; });
+  var rb = document.getElementById('reset');
+  rb.onclick = function(){
+    if(rb.dataset.sure){ S.bank.forEach(function(q){ delete store[q.id]; }); save(); viewSetup(); return; }
+    rb.dataset.sure = '1'; rb.textContent = 'Confirmer : tout effacer'; rb.style.color = 'var(--bad)';
+  };
+}
+function viewCours(k){
+  var S = cur;
+  setCrumbs(lvCrumbs(S,'Cours'));
+  var next = S.chs[S.chs.indexOf(k)+1], prev = S.chs[S.chs.indexOf(k)-1];
+  app.innerHTML = '<p class="eyebrow">'+S.ch[k].t+'</p><h2 class="title">'+S.ch[k].n+'</h2>'+
+    '<article class="card recap">'+S.cours[k]+'</article>'+
+    '<div class="actions"><button class="btn" id="train">S’entraîner sur ce chapitre</button><button class="btn ghost" data-go="'+S.id+'">Retour à la série</button></div>'+
+    '<div class="actions" style="margin-top:6px">'+(prev?'<button class="link" data-go="'+S.id+'c'+prev+'">← '+S.ch[prev].n+'</button>':'')+(next?'<button class="link" data-go="'+S.id+'c'+next+'">'+S.ch[next].n+' →</button>':'')+'</div>';
+  bindGo();
+  document.getElementById('train').onclick = function(){ startQuiz('ch'+k); };
+  window.scrollTo(0,0);
+}
+function modeName(id){
+  if(id==='all') return 'Toute la série';
+  if(id==='err') return 'Mes erreurs';
+  if(id==='timed') return 'Contre la montre';
+  var k = parseInt(id.slice(2),10); return cur.ch[k] ? cur.ch[k].t+' · '+cur.ch[k].n : '';
+}
+function startQuiz(id){
+  var S = cur, list;
+  if(id==='all' || id==='timed') list = S.bank.slice();
+  else if(id==='err') list = S.bank.filter(function(q){ return store[q.id]===0; });
+  else list = S.bank.filter(function(q){ return q.ch===parseInt(id.slice(2),10); });
+  if(id==='timed'){ list = shuffle(list).slice(0,TIMED_N); }
+  else {
+    if(opts.shuffle) list = shuffle(list);
+    if(opts.len && list.length>opts.len) list = list.slice(0,opts.len);
+  }
+  session = {list:list, i:0, done:false, res:{}, sel:null, label:id, mode:modeName(id), timed:id==='timed', endsAt:id==='timed'?Date.now()+TIMED_SEC*1000:0};
+  clearTimer();
+  if(session.timed){ timer = setInterval(tick,1000); }
+  viewQuestion();
+}
+function fmtTime(ms){ var s = Math.max(0,Math.ceil(ms/1000)); return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2); }
+function tick(){
+  if(!session || !session.timed){ clearTimer(); return; }
+  var left = session.endsAt - Date.now();
+  var el = document.getElementById('timer');
+  if(el) el.textContent = fmtTime(left);
+  if(left<=0){ clearTimer(); viewResult(); }
+}
+function currentQ(){ return session.list[session.i]; }
+function viewQuestion(){
+  var S = cur, q = currentQ(), n = session.list.length;
+  var ok = Object.keys(session.res).filter(function(k){return session.res[k];}).length;
+  setCrumbs(lvCrumbs(S));
+  session.done = false; session.sel = null;
+  q._order = q.t==='qcm' ? (q.noshuffle ? q.c.map(function(t,i){return {t:t,i:i};}) : shuffle(q.c.map(function(t,i){return {t:t,i:i};}))) : null;
+  var html = '<div class="quizbar"><button class="link" id="quit">← Quitter</button><div class="count">Question <b>'+(session.i+1)+'</b> / '+n+'</div>'+
+    (session.timed?'<div class="clock" aria-label="Temps restant">⏱ <b id="timer">'+fmtTime(session.endsAt-Date.now())+'</b></div>':'')+
+    '<div class="score" aria-label="Bonnes réponses">✓ '+ok+'</div></div>'+
+    '<div class="progress" aria-hidden="true"><i style="width:'+(100*session.i/n)+'%"></i></div>'+
+    '<article class="card qcard"><div class="tags"><span class="chip">'+S.ch[q.ch].t+' · '+S.ch[q.ch].n+'</span><span class="chip kind">'+q.k+'</span></div>'+
+    '<p class="prompt">'+q.q+'</p>';
+  if(q.fig) html += '<figure class="fig" id="fig">'+figure(q,[])+'<figcaption>'+(q.fig==='tr'?'Chaque carreau mesure une unité':'Figure non à l’échelle')+'</figcaption></figure>';
+  html += '<div id="answer">';
+  if(q.t==='qcm'){
+    html += '<div class="choices" role="group" aria-label="Réponses possibles">'+q._order.map(function(o,k){ return '<button class="opt" data-k="'+k+'" aria-pressed="false"><span class="l">'+'ABCD'[k]+'</span><span>'+o.t+'</span></button>'; }).join('')+'</div>';
+  } else if(q.t==='vf'){
+    html += '<div class="choices vf" role="group" aria-label="Vrai ou faux"><button class="opt" data-k="1" aria-pressed="false">Vrai</button><button class="opt" data-k="0" aria-pressed="false">Faux</button></div>';
+  } else {
+    var ph = q.t==='num' ? 'ex. 36' : (q.t==='pow' ? 'ex. 4^2 ou 4²' : 'ta réponse');
+    html += '<div class="field"><label class="muted" for="ans" style="width:100%;font-size:15px">Ta réponse</label><input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+ph+'">'+(q.unit?'<span class="unit">'+q.unit+'</span>':'')+'</div>';
+    var keys = q.t==='num' ? ['−'] : (q.t==='pow' ? ['²','³','^'] : ['×','²','(',')','+','−']);
+    html += '<div class="keys" aria-label="Touches utiles">'+keys.map(function(k){return '<button type="button" data-key="'+k+'" aria-label="Insérer '+k+'">'+k+'</button>';}).join('')+'</div>';
+  }
+  html += '</div><div class="actions" id="actions"><button class="btn" id="check">Valider</button><button class="btn ghost" id="skip">Je ne sais pas</button></div><div id="fb" aria-live="polite"></div></article>';
+  app.innerHTML = html;
+  document.getElementById('quit').onclick = function(){ clearTimer(); if(Object.keys(session.res).length) viewResult(); else { session=null; nav(S.id); } };
+  document.getElementById('check').onclick = function(){ submit(false); };
+  document.getElementById('skip').onclick = function(){ submit(true); };
+  Array.prototype.forEach.call(app.querySelectorAll('.opt'), function(b){
+    b.onclick = function(){
+      if(session.done) return;
+      session.sel = parseInt(b.getAttribute('data-k'),10);
+      Array.prototype.forEach.call(app.querySelectorAll('.opt'), function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
+      if(q.t==='vf') submit(false);
+    };
+  });
+  var inp = document.getElementById('ans');
+  if(inp){
+    inp.focus({preventScroll:true});
+    Array.prototype.forEach.call(app.querySelectorAll('[data-key]'), function(b){
+      b.onclick = function(){
+        var k = b.getAttribute('data-key'), s = inp.selectionStart==null?inp.value.length:inp.selectionStart, e = inp.selectionEnd==null?s:inp.selectionEnd;
+        inp.value = inp.value.slice(0,s)+k+inp.value.slice(e); inp.focus(); var p = s+k.length; inp.setSelectionRange(p,p);
+      };
+    });
+  }
+  window.scrollTo(0,0);
+}
+function answerText(q){
+  if(q.t==='qcm') return q.c[q.a];
+  if(q.t==='vf') return q.a ? 'Vrai' : 'Faux';
+  if(q.t==='num') return fr(q.a)+(q.unit?' '+q.unit:'');
+  return q.show;
+}
+function submit(skipped){
+  if(session.done) return;
+  var q = currentQ(), res;
+  if(skipped){ res = {ok:false, skipped:true}; }
+  else if(q.t==='qcm'){
+    if(session.sel==null){ showMsg('Choisis une réponse avant de valider.'); return; }
+    res = {ok: q._order[session.sel].i===q.a};
+  } else if(q.t==='vf'){
+    if(session.sel==null){ showMsg('Choisis Vrai ou Faux.'); return; }
+    res = {ok: (session.sel===1)===q.a};
+  } else {
+    var raw = document.getElementById('ans').value;
+    if(!raw.trim()){ showMsg('Écris ta réponse avant de valider.'); return; }
+    res = check(q, raw);
+  }
+  session.done = true;
+  session.res[q.id] = res.ok;
+  store[q.id] = res.ok ? 1 : 0; save();
+  if(q.t==='qcm'){
+    Array.prototype.forEach.call(app.querySelectorAll('.opt'), function(b,k){
+      b.disabled = true;
+      if(q._order[k].i===q.a) b.classList.add('right');
+      else if(k===session.sel && !res.ok) b.classList.add('wrong');
+    });
+  } else if(q.t==='vf'){
+    Array.prototype.forEach.call(app.querySelectorAll('.opt'), function(b){
+      b.disabled = true; var v = b.getAttribute('data-k')==='1';
+      if(v===q.a) b.classList.add('right'); else if(!res.ok && parseInt(b.getAttribute('data-k'),10)===session.sel) b.classList.add('wrong');
+    });
+  } else { document.getElementById('ans').disabled = true; Array.prototype.forEach.call(app.querySelectorAll('[data-key]'), function(b){b.disabled=true;}); }
+  if(q.fig && q.hi && q.hi.length){ document.getElementById('fig').innerHTML = figure(q,q.hi)+'<figcaption>Les éléments concernés sont surlignés</figcaption>'; }
+  else if(q.fig && q.hi){ document.getElementById('fig').innerHTML = figure(q,q.hi)+'<figcaption>'+(q.fig==='tr'?'Chaque carreau mesure une unité':'Figure non à l’échelle')+'</figcaption>'; }
+  var last = session.i === session.list.length-1;
+  var head = res.ok ? '✓ Bonne réponse' : (res.skipped ? 'Voici la réponse' : '✗ Pas tout à fait');
+  var body = '';
+  if(res.ok && res.note) body += '<p>'+res.note+'</p>';
+  if(!res.ok){ if(res.msg) body += '<p>'+res.msg+'</p>'; body += '<p>Réponse attendue : <b>'+answerText(q)+'</b></p>'; }
+  body += '<div class="exp">'+q.e+'</div>';
+  document.getElementById('fb').innerHTML = '<div class="fb '+(res.ok?'good':'bad')+'"><div class="h">'+head+'</div>'+body+'</div>';
+  document.getElementById('actions').innerHTML = '<button class="btn" id="next">'+(last?'Voir mon résultat':'Question suivante →')+'</button>';
+  var nx = document.getElementById('next');
+  nx.onclick = next; nx.focus({preventScroll:false});
+  var sc = app.querySelector('.score'); if(sc) sc.textContent = '✓ '+Object.keys(session.res).filter(function(k){return session.res[k];}).length;
+}
+function showMsg(t){
+  document.getElementById('fb').innerHTML = '<p class="muted" style="margin:14px 0 0">'+t+'</p>';
+}
+function next(){
+  if(session.i < session.list.length-1){ session.i++; viewQuestion(); }
+  else { clearTimer(); viewResult(); }
+}
+function viewResult(){
+  clearTimer();
+  var S = cur;
+  setCrumbs(lvCrumbs(S));
+  var ids = Object.keys(session.res);
+  var tot = session.timed ? session.list.length : ids.length;
+  var ok = ids.filter(function(k){return session.res[k];}).length;
+  var per = {}, miss = 0;
+  S.chs.forEach(function(k){ per[k] = [0,0]; });
+  session.list.forEach(function(q){
+    if(q.id in session.res){ per[q.ch][1]++; if(session.res[q.id]) per[q.ch][0]++; else miss++; }
+    else if(session.timed){ per[q.ch][1]++; miss++; }
+  });
+  var pct = tot ? ok/tot : 0;
+  var msg = pct>=.9 ? 'Excellent. Tu maîtrises ces notions.' : pct>=.7 ? 'Très bien. Relis les rappels des questions ratées.' : pct>=.5 ? 'C’est un bon début. Refais tes erreurs pour progresser.' : 'Reprends le cours, puis recommence la série : tu vas progresser vite.';
+  var rows = '';
+  S.chs.forEach(function(k){
+    if(!per[k][1]) return;
+    rows += '<div class="row"><span><b>'+S.ch[k].t+'</b> · '+S.ch[k].n+'</span><span class="muted">'+per[k][0]+' / '+per[k][1]+'</span><span class="progress" aria-hidden="true"><i style="width:'+(100*per[k][0]/per[k][1])+'%"></i></span></div>';
+  });
+  var date = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  var name = getName();
+  app.innerHTML = '<section class="card result"><p class="eyebrow">Résultat</p><p style="margin:0">'+msg+'</p>'+
+    '<div class="ticket" id="ticket"><div class="t1">'+S.title+' · '+sup(S.lv)+'</div><div class="t2">'+session.mode+'</div><div class="big-score">'+ok+'<small> / '+tot+'</small></div><div class="t3"><span id="who">'+(name?name.replace(/[<>&]/g,''):'Ton prénom')+'</span> · '+date+'</div></div>'+
+    '<p class="muted" style="text-align:center;margin:0 0 8px;font-size:15px">Ton résultat a été transmis à Madame Hechaichi.</p>'+
+    '<div class="breakdown">'+rows+'</div>'+
+    '<div class="actions" style="justify-content:center"><button class="btn" id="again-err"'+(miss && !session.timed?'':' disabled')+'>Refaire mes erreurs</button><button class="btn ghost" id="again">Choisir une autre série</button></div></section>';
+  if(tot>0 && !session.sent){ session.sent = true; sendScore(name||'(sans prénom)', S.title+' ('+S.lv+') · '+session.mode, ok+' / '+tot); }
+  document.getElementById('again').onclick = function(){ session=null; nav(S.id); };
+  var ae = document.getElementById('again-err');
+  var wrong = session.list.filter(function(q){ return session.res[q.id]===false; });
+  ae.disabled = !wrong.length;
+  ae.onclick = function(){ if(!wrong.length) return; var list = opts.shuffle ? shuffle(wrong) : wrong; session = {list:list,i:0,done:false,res:{},sel:null,label:'err',mode:'Mes erreurs',timed:false,endsAt:0}; viewQuestion(); };
+  window.scrollTo(0,0);
+}
+
+/* ---------- routage ---------- */
+function route(){
+  clearTimer();
+  var r = (location.hash||'').replace('#','');
+  var m;
+  if(r==='6e') return viewSoon('6e');
+  if(r==='5e') return viewLevel('5e');
+  if(r==='4e') return viewLevel('4e');
+  if((m = /^(ds\d)$/.exec(r)) && SERIES[m[1]]){ cur = SERIES[m[1]]; return viewSetup(); }
+  if((m = /^(ds\d)c(\d)$/.exec(r)) && SERIES[m[1]] && SERIES[m[1]].ch[m[2]]){ cur = SERIES[m[1]]; return viewCours(parseInt(m[2],10)); }
+  return viewHome();
+}
+window.addEventListener('hashchange', function(){ session = null; route(); });
+document.getElementById('brand').onclick = function(){ session=null; nav('accueil'); };
+document.addEventListener('keydown', function(e){
+  if(!session || e.defaultPrevented) return;
+  var tgt = e.target;
+  if(e.key==='Enter'){
+    if(session.done){ var nx = document.getElementById('next'); if(nx && tgt!==nx){ e.preventDefault(); next(); } }
+    else if(document.getElementById('check') && tgt.tagName!=='BUTTON'){ e.preventDefault(); submit(false); }
+  } else if(!session.done && /^[1-4]$/.test(e.key) && tgt.tagName!=='INPUT'){
+    var q = currentQ();
+    if(q && q.t==='qcm'){ var btn = app.querySelector('.opt[data-k="'+(parseInt(e.key,10)-1)+'"]'); if(btn) btn.click(); }
+  }
+});
+route();
+})();
+</script>
+</body>
+</html>
