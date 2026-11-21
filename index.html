@@ -194,6 +194,9 @@ footer{margin-top:40px;font-size:14px;color:var(--muted)}
 .field.who{max-width:420px;margin:0 auto}
 .note{margin:12px 0 0;padding:10px 14px;border-left:5px solid var(--hl);background:var(--surface);border-radius:0 10px 10px 0;font-size:16px}
 .namebox{max-width:none;margin:18px 0 0}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 .18em;font-size:.95em}
+.fr>span{padding:0 .25em}
+.fr>span:first-child{border-bottom:1.6px solid currentColor}
 </style>
 </head>
 <body>
@@ -549,18 +552,203 @@ ds3:{
 '<p>Pour encadrer √7 par deux entiers : 1) on encadre 7 par deux carrés parfaits : 4 &lt; 7 &lt; 9 ; 2) on applique la racine carrée à chaque terme : 2 &lt; √7 &lt; 3.</p>'
 }
 };
+function F(n,d){ return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>'; }
+
+COURS.six2 = {
+3:'<h3>Partage équitable</h3>'+
+'<p class="def">Lorsqu’on partage une unité en un nombre entier de parts égales et qu’on prend un nombre entier de ces parts, on obtient une <b>fraction</b> de l’unité.</p>'+
+'<p>Exemple : '+F(2,3)+' (« deux tiers ») : on partage l’unité en trois parts égales, puis on prend deux parts. Dans '+F(2,3)+', <b>2</b> est le <b>numérateur</b> et <b>3</b> est le <b>dénominateur</b>.</p>'+
+'<h3>Décomposer une fraction</h3>'+
+'<p>'+F(4,3)+' s’écrit : « quatre tiers » ; '+F(3,3)+' + '+F(1,3)+' = 1 + '+F(1,3)+' ; '+F(1,3)+' + '+F(1,3)+' + '+F(1,3)+' + '+F(1,3)+' ; 4 × '+F(1,3)+'.</p>'+
+'<h3>Fractions décimales</h3>'+
+'<p class="def">Une fraction décimale est une fraction de dénominateur 10 ; 100 ; 1 000…</p>'+
+'<p>Elle possède plusieurs décompositions : '+F(247,100)+' = 2 + '+F(4,10)+' + '+F(7,100)+' = 2 + '+F(47,100)+'.</p>'+
+'<h3>Demi-droite graduée</h3>'+
+'<p>Pour placer '+F(7,4)+' : on partage l’unité en 4 segments de même longueur, puis on reporte cette longueur 7 fois à partir de zéro.</p>'+
+'<h3>Fractions égales</h3>'+
+'<p class="def">Si on multiplie ou divise le numérateur et le dénominateur par un même nombre non nul, on obtient une fraction égale : '+F('<i>a</i>','<i>b</i>')+' = '+F('<i>a</i> × <i>k</i>','<i>b</i> × <i>k</i>')+' et '+F('<i>a</i>','<i>b</i>')+' = '+F('<i>a</i> : <i>k</i>','<i>b</i> : <i>k</i>')+'.</p>'+
+'<p>Exemples : '+F(3,4)+' = '+F('3 × 2','4 × 2')+' = '+F(6,8)+' ; '+F(12,8)+' = '+F('12 : 4','8 : 4')+' = '+F(3,2)+'.</p>'+
+'<p><b>Simplifier</b> une fraction, c’est trouver une fraction égale dont le numérateur et le dénominateur sont plus petits. Exemple : '+F(49,63)+' = '+F('7 × 7','7 × 9')+' = '+F(7,9)+' (table de 7).</p>'+
+'<h3>Pourcentages et proportions</h3>'+
+'<p class="def">Un pourcentage est une fraction de dénominateur 100. Une proportion est une fraction qui exprime le rapport entre une partie et le tout.</p>'+
+'<p>62 % = '+F(62,100)+' ; 25 % = '+F(25,100)+' = '+F(1,4)+' ; 75 % = '+F(3,4)+' ; 50 % = '+F(1,2)+'.<br>3 yaourts sur 5 : proportion '+F(3,5)+' = '+F(60,100)+' = 60 %.</p>',
+4:'<h3>Distance entre deux points</h3>'+
+'<p class="def">La distance entre deux points <i>A</i> et <i>B</i> est la longueur du segment [<i>AB</i>], notée <i>AB</i>. Le chemin le plus court de <i>A</i> à <i>B</i> est le segment [<i>AB</i>].</p>'+
+'<p class="def">• Si <i>M</i> appartient à [<i>AB</i>], alors <i>AM</i> + <i>MB</i> = <i>AB</i>.<br>• Si <i>AM</i> + <i>MB</i> = <i>AB</i>, alors <i>M</i> appartient à [<i>AB</i>].<br>• Si <i>N</i> n’appartient pas à [<i>AB</i>], alors <i>AN</i> + <i>NB</i> &gt; <i>AB</i>.<br>• Si <i>AN</i> + <i>NB</i> &gt; <i>AB</i>, alors <i>N</i> n’appartient pas à [<i>AB</i>].</p>'+
+'<h3>Milieu d’un segment</h3>'+
+'<p class="def">Le milieu d’un segment est le point situé à la même distance de chaque extrémité du segment. Le milieu <i>I</i> de [<i>MN</i>] est le point du segment tel que <i>MI</i> = <i>IN</i> (on dit que <i>I</i> est équidistant de <i>M</i> et <i>N</i>).</p>'+
+'<h3>Cercle</h3>'+
+'<p class="def">Un cercle de centre <i>O</i> est formé par tous les points situés à la même distance <i>r</i> du point <i>O</i>.</p>'+
+'<p>Un <b>rayon</b> relie un point du cercle au centre. Une <b>corde</b> relie deux points du cercle. Un <b>diamètre</b> est une corde qui passe par le centre.<br>Le diamètre est le <b>double</b> du rayon ; un diamètre est plus long (ou aussi long) que toute corde.</p>'+
+'<h3>Disque</h3>'+
+'<p class="def">Un disque de centre <i>O</i> et de rayon <i>r</i> est formé de tous les points situés à une distance inférieure ou égale à <i>r</i> de <i>O</i>.</p>'+
+'<p>Si <i>OA</i> ⩽ 3 cm, <i>A</i> est dans le disque ; si <i>OB</i> = 3 cm, <i>B</i> est sur le cercle (et dans le disque) ; si <i>OC</i> &gt; 3 cm, <i>C</i> n’est ni sur le cercle ni dans le disque.</p>'
+};
+
+var BANK6 = (function(){
+var Q = [];
+function add(o){ Q.push(o); }
+function F(n,d){ return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>'; }
+function fa(s){ var p = s.split('/'); return p.length===2 ? F(p[0],p[1]) : s; }
+function fnum(q,a,den){ add(q); }
+
+/* ============ CHAPITRE 3 — FRACTIONS (1) ============ */
+// Vocabulaire
+add({ch:3,k:'Cours',t:'qcm',q:'Dans la fraction '+F(2,3)+', le nombre 2 s’appelle…',c:['le numérateur','le dénominateur','le quotient','l’unité'],a:0,e:'Dans l’écriture '+F(2,3)+', 2 est le <b>numérateur</b> et 3 est le dénominateur.'});
+add({ch:3,k:'Cours',t:'qcm',q:'Dans la fraction '+F(2,3)+', le nombre 3 s’appelle…',c:['le dénominateur','le numérateur','le quotient','le reste'],a:0,e:'Dans l’écriture '+F(2,3)+', 3 est le <b>dénominateur</b> : il indique en combien de parts égales on partage l’unité.'});
+add({ch:3,k:'Cours',t:'qcm',q:'La fraction '+F(2,3)+' (« deux tiers ») rend compte…',c:['d’un partage de l’unité en trois parts égales, puis de la prise de deux parts sur les trois','d’un partage de l’unité en deux parts égales, puis de la prise de trois parts','de la somme de 2 et de 3','du produit de 2 par 3'],a:0,e:'Rappel du cours : on partage une unité en un nombre entier de parts égales (ici 3) et on prend un nombre entier de ces parts (ici 2).'});
+add({ch:3,k:'Cours',t:'qcm',q:'Comment lit-on la fraction '+F(4,3)+' ?',c:['quatre tiers','trois quarts','quatre trois','un tiers'],a:0,e:'Le dénominateur 3 se lit « tiers » : '+F(4,3)+' se lit « quatre tiers ».'});
+add({ch:3,k:'Cours',t:'vf',q:'La fraction '+F(5,3)+' est plus grande que 1.',a:true,e:'Vrai : '+F(5,3)+' = '+F(3,3)+' + '+F(2,3)+' = 1 + '+F(2,3)+', donc elle dépasse 1 unité.'});
+// Décomposer
+add({ch:3,k:'Calcul',t:'num',q:F(4,3)+' = 1 + '+F('…',3)+'. Quel est le numérateur manquant ?',a:1,calc:'4-3',e:F(4,3)+' = '+F(3,3)+' + '+F(1,3)+' = 1 + '+F(1,3)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:F(5,3)+' = 1 + '+F('…',3)+'. Quel est le numérateur manquant ?',a:2,calc:'5-3',e:F(5,3)+' = '+F(3,3)+' + '+F(2,3)+' = 1 + '+F(2,3)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:F(7,4)+' = 1 + '+F('…',4)+'. Quel est le numérateur manquant ?',a:3,calc:'7-4',e:F(7,4)+' = '+F(4,4)+' + '+F(3,4)+' = 1 + '+F(3,4)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:F(11,4)+' = 2 + '+F('…',4)+'. Quel est le numérateur manquant ?',a:3,calc:'11-2*4',e:'2 unités = '+F(8,4)+' et '+F(11,4)+' = '+F(8,4)+' + '+F(3,4)+', donc '+F(11,4)+' = 2 + '+F(3,4)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:F(13,5)+' = 2 + '+F('…',5)+'. Quel est le numérateur manquant ?',a:3,calc:'13-2*5',e:'2 unités = '+F(10,5)+' et '+F(13,5)+' = '+F(10,5)+' + '+F(3,5)+', donc '+F(13,5)+' = 2 + '+F(3,5)+'.'});
+add({ch:3,k:'Cours',t:'qcm',q:'La fraction '+F(4,3)+' est égale à…',c:['4 × '+F(1,3),'4 + '+F(1,3),'3 × '+F(1,4),F(1,3)+' + 3'],a:0,e:'Décomposition du cours : '+F(4,3)+' = '+F(1,3)+' + '+F(1,3)+' + '+F(1,3)+' + '+F(1,3)+' = 4 × '+F(1,3)+'.'});
+// Unités en parts
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 1 unité = … huitièmes.',a:8,calc:'8',e:'Une unité partagée en 8 parts égales donne 8 huitièmes : 1 = '+F(8,8)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 1 unité = … quarts.',a:4,calc:'4',e:'Une unité partagée en 4 parts égales donne 4 quarts : 1 = '+F(4,4)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 5 unités = … huitièmes.',a:40,calc:'5*8',e:'Chaque unité vaut 8 huitièmes, donc 5 unités = 5 × 8 = 40 huitièmes.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 5 unités = … quarts.',a:20,calc:'5*4',e:'Chaque unité vaut 4 quarts, donc 5 unités = 5 × 4 = 20 quarts.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 3 unités = … tiers.',a:9,calc:'3*3',e:'Chaque unité vaut 3 tiers, donc 3 unités = 3 × 3 = 9 tiers.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 2 unités = … cinquièmes.',a:10,calc:'2*5',e:'Chaque unité vaut 5 cinquièmes, donc 2 unités = 2 × 5 = 10 cinquièmes.'});
+// Fractions décimales
+add({ch:3,k:'Cours',t:'qcm',q:'Une <b>fraction décimale</b> est…',c:['une fraction de dénominateur 10 ; 100 ; 1 000…','une fraction dont le numérateur est 10','une fraction égale à un nombre entier','une fraction plus petite que 1'],a:0,e:'Définition du cours : une fraction décimale est une fraction de dénominateur 10 ; 100 ; 1 000…'});
+add({ch:3,k:'Cours',t:'qcm',q:'Laquelle de ces fractions est une fraction décimale ?',c:[F(247,100),F(3,7),F(5,3),F(2,9)],a:0,e:'Seule '+F(247,100)+' a pour dénominateur 10, 100, 1 000… : c’est une fraction décimale.'});
+add({ch:3,k:'Cours',t:'vf',q:'La fraction '+F(7,10)+' est une fraction décimale.',a:true,e:'Vrai : son dénominateur est 10.'});
+add({ch:3,k:'Cours',t:'vf',q:'La fraction '+F(3,4)+' est une fraction décimale.',a:false,e:'Faux : son dénominateur est 4, ce n’est ni 10, ni 100, ni 1 000…'});
+add({ch:3,k:'Calcul',t:'num',q:F(247,100)+' = 2 + '+F('…',10)+' + '+F(7,100)+'. Quel est le numérateur manquant ?',a:4,calc:'4',e:'« Deux unités, quatre dixièmes et sept centièmes » : '+F(247,100)+' = 2 + '+F(4,10)+' + '+F(7,100)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:F(247,100)+' = 2 + '+F('…',100)+'. Quel est le numérateur manquant ?',a:47,calc:'247-200',e:'« Deux unités et quarante-sept centièmes » : '+F(247,100)+' = 2 + '+F(47,100)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:F(35,10)+' = 3 + '+F('…',10)+'. Quel est le numérateur manquant ?',a:5,calc:'35-30',e:'3 unités = '+F(30,10)+' et '+F(35,10)+' = '+F(30,10)+' + '+F(5,10)+', donc '+F(35,10)+' = 3 + '+F(5,10)+'.'});
+
+// Demi-droite graduée
+var DG = {
+ D1:{N:3,p:4,pts:{A:7,B:10,C:3,D:11}},
+ D2:{N:2,p:8,pts:{E:5,F:11,G:14,H:3}},
+ D3:{N:3,p:3,pts:{P:4,Q:7,R:2,S:8}},
+ D4:{N:2,p:5,pts:{T:3,U:7,V:9,W:4}}
+};
+function dgRead(d,name){
+  var g = DG[d], k = g.pts[name];
+  add({ch:3,k:'Figure',t:'frac',fig:'dg',g:g,hi:[name],den:g.p,a:k+'/'+g.p,
+    q:'Sur la demi-droite graduée, l’unité est partagée en '+g.p+' parts égales. Quelle est l’abscisse du point <i>'+name+'</i> ? (écris une fraction de dénominateur '+g.p+')',
+    e:'Entre 0 et 1, il y a '+g.p+' parts. Le point <i>'+name+'</i> est à '+k+' parts de 0 : son abscisse est '+F(k,g.p)+'.'});
+}
+function dgPlace(d,name,rot){
+  var g = DG[d], k = g.pts[name], keys = Object.keys(g.pts);
+  add({ch:3,k:'Figure',t:'qcm',noshuffle:true,fig:'dg',g:g,hi:[name],
+    q:'Sur la demi-droite graduée, quel point a pour abscisse '+F(k,g.p)+' ?',
+    c:keys.map(function(n){ return 'Le point '+n; }),a:keys.indexOf(name),
+    e:'Pour placer '+F(k,g.p)+', on partage l’unité en '+g.p+' parts égales et on reporte '+k+' fois cette longueur à partir de 0 : on arrive au point <b>'+name+'</b>.'});
+}
+dgRead('D1','A'); dgRead('D1','D'); dgRead('D2','F'); dgRead('D2','G'); dgRead('D3','Q'); dgRead('D4','V');
+dgPlace('D1','C'); dgPlace('D2','F'); dgPlace('D3','S'); dgPlace('D4','U');
+
+// Fractions égales
+add({ch:3,k:'Cours',t:'qcm',q:'Si on multiplie le numérateur et le dénominateur d’une fraction par un même nombre non nul, on obtient…',c:['une fraction égale à la fraction de départ','une fraction plus grande','une fraction plus petite','un nombre entier'],a:0,e:'Propriété du cours : '+F('<i>a</i>','<i>b</i>')+' = '+F('<i>a</i> × <i>k</i>','<i>b</i> × <i>k</i>')+' (avec <i>b</i> ≠ 0 et <i>k</i> ≠ 0). On peut aussi diviser le numérateur et le dénominateur par un même nombre.'});
+add({ch:3,k:'Cours',t:'vf',q:F(3,4)+' = '+F(6,8),a:true,e:'Vrai : on a multiplié le numérateur et le dénominateur par 2 : '+F(3,4)+' = '+F('3 × 2','4 × 2')+' = '+F(6,8)+'.'});
+add({ch:3,k:'Cours',t:'vf',q:'On obtient une fraction égale en ajoutant le même nombre au numérateur et au dénominateur.',a:false,e:'Faux. Il faut <b>multiplier</b> (ou diviser) par un même nombre. Par exemple '+F(3,4)+' ≠ '+F(5,6)+' (on a ajouté 2).'});
+[[3,5,35,21],[2,9,54,12],[4,3,21,28],[5,8,72,45],[7,4,20,35],[7,4,12,21]].forEach(function(p){
+  var k = p[2]/p[1];
+  add({ch:3,k:'Calcul',t:'num',q:'Complète : '+F(p[0],p[1])+' = '+F('…',p[2])+'.',a:p[3],calc:p[0]+'*'+k,e:p[1]+' × '+k+' = '+p[2]+', donc on multiplie aussi le numérateur par '+k+' : '+p[0]+' × '+k+' = '+p[3]+'. Ainsi '+F(p[0],p[1])+' = '+F(p[3],p[2])+'.'});
+});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 9 = '+F('…',4)+'.',a:36,calc:'9*4',e:'9 = '+F(9,1)+' = '+F('9 × 4','1 × 4')+' = '+F(36,4)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : 5 = '+F('…',12)+'.',a:60,calc:'5*12',e:'5 = '+F(5,1)+' = '+F('5 × 12','1 × 12')+' = '+F(60,12)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : '+F(10,25)+' = '+F(2,'…')+'.',a:5,calc:'25/5',e:'On divise le numérateur par 5 (10 : 5 = 2), donc on divise aussi le dénominateur par 5 : 25 : 5 = 5. Ainsi '+F(10,25)+' = '+F(2,5)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : '+F(18,30)+' = '+F('…',5)+'.',a:3,calc:'18/6',e:'On divise le dénominateur par 6 (30 : 6 = 5), donc on divise aussi le numérateur par 6 : 18 : 6 = 3. Ainsi '+F(18,30)+' = '+F(3,5)+'.'});
+add({ch:3,k:'Calcul',t:'num',q:'Complète : '+F(56,49)+' = '+F('…',7)+'.',a:8,calc:'56/7',e:'On divise le dénominateur par 7 (49 : 7 = 7), donc on divise aussi le numérateur par 7 : 56 : 7 = 8. Ainsi '+F(56,49)+' = '+F(8,7)+'.'});
+add({ch:3,k:'Calcul',t:'qcm',q:'La fraction '+F(12,30)+' est égale à…',c:[F(2,5),F(3,4),F(5,8),F(1,2)],a:0,e:'On divise le numérateur et le dénominateur par 6 : '+F(12,30)+' = '+F('12 : 6','30 : 6')+' = '+F(2,5)+'.'});
+add({ch:3,k:'Calcul',t:'qcm',q:'La fraction '+F(10,16)+' est égale à…',c:[F(5,8),F(2,5),F(3,4),F(1,2)],a:0,e:'On divise le numérateur et le dénominateur par 2 : '+F(10,16)+' = '+F(5,8)+'.'});
+add({ch:3,k:'Calcul',t:'qcm',q:'La fraction '+F(15,20)+' est égale à…',c:[F(3,4),F(5,8),F(2,5),F(1,2)],a:0,e:'On divise le numérateur et le dénominateur par 5 : '+F(15,20)+' = '+F(3,4)+'.'});
+// Simplifier
+function simp(n,d,r){
+  var g = (function gcd(a,b){ return b?gcd(b,a%b):a; })(n,d);
+  add({ch:3,k:'Calcul',t:'frac',irr:true,a:r,
+    q:'Simplifie le plus possible la fraction '+F(n,d)+'.',
+    e:'On cherche un nombre qui divise le numérateur et le dénominateur : '+n+' = '+g+' × '+(n/g)+' et '+d+' = '+g+' × '+(d/g)+'. Donc '+F(n,d)+' = '+F(g+' × '+(n/g),g+' × '+(d/g))+' = '+(r.indexOf('/')>0?fa(r):r)+'.'});
+}
+simp(36,16,'9/4'); simp(21,33,'7/11'); simp(60,48,'5/4'); simp(180,240,'3/4'); simp(63,21,'3'); simp(28,36,'7/9'); simp(49,63,'7/9');
+// Pourcentages et proportions
+add({ch:3,k:'Cours',t:'num',q:'Complète : 62 % = '+F('…',100)+'.',a:62,calc:'62',e:'Un pourcentage est une fraction de dénominateur 100 : 62 % = '+F(62,100)+'.'});
+add({ch:3,k:'Cours',t:'num',q:'Complète : 25 % = '+F(25,100)+' = '+F(1,'…')+'.',a:4,calc:'100/25',e:'25 % = '+F('25 × 1','25 × 4')+' = '+F(1,4)+'.'});
+add({ch:3,k:'Cours',t:'num',q:'Complète : 75 % = '+F(75,100)+' = '+F(3,'…')+'.',a:4,calc:'100/25',e:'75 % = '+F('25 × 3','25 × 4')+' = '+F(3,4)+'.'});
+add({ch:3,k:'Cours',t:'num',q:'Complète : 50 % = '+F(50,100)+' = '+F(1,'…')+'.',a:2,calc:'100/50',e:'50 % = '+F('50 × 1','50 × 2')+' = '+F(1,2)+'.'});
+add({ch:3,k:'Cours',t:'frac',a:'3/5',q:'Dans mon frigo, 3 yaourts sur 5 sont des yaourts aux fruits. Quelle est la proportion de yaourts aux fruits ? (écris une fraction)',e:'Une proportion est une fraction qui exprime le rapport entre une partie et le tout : '+F(3,5)+'.'});
+add({ch:3,k:'Cours',t:'num',unit:'%',q:'La proportion de yaourts aux fruits est '+F(3,5)+'. Exprime-la en pourcentage.',a:60,calc:'3*20',e:F(3,5)+' = '+F('3 × 20','5 × 20')+' = '+F(60,100)+' = 60 %.'});
+
+/* ============ CHAPITRE 4 — DISTANCE ============ */
+add({ch:4,k:'Cours',t:'qcm',q:'La <b>distance</b> entre deux points <i>A</i> et <i>B</i> est…',c:['la longueur du segment [<i>AB</i>]','la longueur d’une droite passant par <i>A</i> et <i>B</i>','le milieu du segment [<i>AB</i>]','le double de <i>AB</i>'],a:0,e:'Définition du cours : la distance entre deux points <i>A</i> et <i>B</i> est la longueur du segment [<i>AB</i>], notée <i>AB</i>.'});
+add({ch:4,k:'Cours',t:'qcm',q:'Quel est le chemin le plus court pour aller d’un point <i>A</i> à un point <i>B</i> ?',c:['le segment [<i>AB</i>]','un arc de cercle','n’importe quel chemin','la droite perpendiculaire à (<i>AB</i>)'],a:0,e:'Remarque du cours : le chemin le plus court pour aller de <i>A</i> à <i>B</i> est le segment [<i>AB</i>].'});
+add({ch:4,k:'Cours',t:'qcm',q:'Si le point <i>M</i> appartient au segment [<i>AB</i>], alors…',c:['<i>AM</i> + <i>MB</i> = <i>AB</i>','<i>AM</i> + <i>MB</i> &gt; <i>AB</i>','<i>AM</i> = <i>MB</i>','<i>AM</i> × <i>MB</i> = <i>AB</i>'],a:0,e:'Propriété du cours : si <i>M</i> appartient à [<i>AB</i>], alors <i>AM</i> + <i>MB</i> = <i>AB</i>.'});
+add({ch:4,k:'Cours',t:'qcm',q:'Si le point <i>N</i> n’appartient pas au segment [<i>AB</i>], alors…',c:['<i>AN</i> + <i>NB</i> &gt; <i>AB</i>','<i>AN</i> + <i>NB</i> = <i>AB</i>','<i>AN</i> + <i>NB</i> &lt; <i>AB</i>','<i>AN</i> = <i>NB</i>'],a:0,e:'Propriété du cours : si <i>N</i> n’appartient pas à [<i>AB</i>], alors <i>AN</i> + <i>NB</i> &gt; <i>AB</i> (passer par <i>N</i> allonge le chemin).'});
+add({ch:4,k:'Cours',t:'qcm',q:'Si <i>AM</i> + <i>MB</i> = <i>AB</i>, alors…',c:['le point <i>M</i> appartient au segment [<i>AB</i>]','le point <i>M</i> est le milieu de [<i>AB</i>]','le point <i>M</i> n’appartient pas à [<i>AB</i>]','<i>M</i> est le centre d’un cercle passant par <i>A</i> et <i>B</i>'],a:0,e:'Propriété réciproque du cours : si <i>AM</i> + <i>MB</i> = <i>AB</i>, alors <i>M</i> appartient au segment [<i>AB</i>]. (Pas forcément au milieu.)'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'Le point <i>M</i> appartient au segment [<i>AB</i>]. On donne <i>AB</i> = 9 cm et <i>AM</i> = 4 cm. Calcule <i>MB</i>.',a:5,calc:'9-4',e:'<i>M</i> appartient à [<i>AB</i>] donc <i>AM</i> + <i>MB</i> = <i>AB</i>, d’où <i>MB</i> = 9 − 4 = 5 cm.'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'Le point <i>M</i> appartient au segment [<i>AB</i>]. On donne <i>AB</i> = 12 cm et <i>MB</i> = 5 cm. Calcule <i>AM</i>.',a:7,calc:'12-5',e:'<i>AM</i> + <i>MB</i> = <i>AB</i>, d’où <i>AM</i> = 12 − 5 = 7 cm.'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'Le point <i>M</i> appartient au segment [<i>AB</i>]. On donne <i>AB</i> = 15 cm et <i>AM</i> = 8,5 cm. Calcule <i>MB</i>.',a:6.5,calc:'15-8.5',e:'<i>MB</i> = <i>AB</i> − <i>AM</i> = 15 − 8,5 = 6,5 cm.'});
+add({ch:4,k:'Calcul',t:'qcm',q:'On donne <i>AB</i> = 9 cm, <i>AM</i> = 4 cm et <i>MB</i> = 5 cm. Le point <i>M</i> appartient-il au segment [<i>AB</i>] ?',c:['Oui, car 4 + 5 = 9','Non, car 4 + 5 &gt; 9','Non, car 4 ≠ 5','On ne peut pas savoir'],a:0,e:'<i>AM</i> + <i>MB</i> = 4 + 5 = 9 = <i>AB</i>, donc <i>M</i> appartient à [<i>AB</i>].'});
+add({ch:4,k:'Calcul',t:'qcm',q:'On donne <i>AB</i> = 9 cm, <i>AN</i> = 7 cm et <i>NB</i> = 6 cm. Le point <i>N</i> appartient-il au segment [<i>AB</i>] ?',c:['Non, car 7 + 6 = 13 &gt; 9','Oui, car 7 + 6 = 13','Oui, car 7 &gt; 6','On ne peut pas savoir'],a:0,e:'<i>AN</i> + <i>NB</i> = 7 + 6 = 13 et 13 &gt; 9 = <i>AB</i>, donc <i>N</i> n’appartient pas à [<i>AB</i>].'});
+add({ch:4,k:'Calcul',t:'qcm',q:'On donne <i>AB</i> = 10 cm, <i>AP</i> = 6 cm et <i>PB</i> = 5 cm. Le point <i>P</i> appartient-il au segment [<i>AB</i>] ?',c:['Non, car 6 + 5 = 11 &gt; 10','Oui, car 6 + 5 = 11','Oui, car 6 &gt; 5','Non, car 6 + 5 &lt; 10'],a:0,e:'<i>AP</i> + <i>PB</i> = 6 + 5 = 11 ≠ 10 : <i>P</i> n’appartient pas à [<i>AB</i>].'});
+add({ch:4,k:'Calcul',t:'qcm',q:'On donne <i>AB</i> = 8 cm, <i>AQ</i> = 3 cm et <i>QB</i> = 5 cm. Le point <i>Q</i> appartient-il au segment [<i>AB</i>] ?',c:['Oui, car 3 + 5 = 8','Non, car 3 ≠ 5','Non, car 3 + 5 &gt; 8','On ne peut pas savoir'],a:0,e:'<i>AQ</i> + <i>QB</i> = 3 + 5 = 8 = <i>AB</i>, donc <i>Q</i> appartient à [<i>AB</i>].'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'On donne <i>AN</i> = 7 cm et <i>NB</i> = 6 cm. Calcule <i>AN</i> + <i>NB</i>.',a:13,calc:'7+6',e:'<i>AN</i> + <i>NB</i> = 7 + 6 = 13 cm.'});
+// Milieu
+add({ch:4,k:'Cours',t:'qcm',q:'Le <b>milieu</b> d’un segment est…',c:['le point du segment situé à la même distance de chaque extrémité','un point quelconque du segment','le point situé à 0 cm d’une extrémité','le centre d’un cercle passant par une extrémité'],a:0,e:'Définition du cours : le milieu d’un segment est le point situé à la même distance de chaque extrémité du segment.'});
+add({ch:4,k:'Cours',t:'qcm',q:'Léo affirme : « <i>I</i> est le milieu de [<i>MN</i>] car <i>MI</i> = 4 cm. » Que manque-t-il à son explication ?',c:['Il faut que <i>I</i> appartienne à [<i>MN</i>] et que <i>IN</i> = <i>MI</i>','Il faut que <i>MN</i> = 4 cm','Il faut que <i>I</i> soit le centre d’un cercle','Rien, son explication est suffisante'],a:0,e:'Le milieu <i>I</i> de [<i>MN</i>] est le point du segment [<i>MN</i>] tel que <i>MI</i> = <i>IN</i> : il faut les <b>deux</b> distances égales (<i>IN</i> = 4 cm aussi).'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'<i>I</i> est le milieu de [<i>MN</i>] et <i>MN</i> = 10 cm. Calcule <i>MI</i>.',a:5,calc:'10/2',e:'<i>MI</i> = <i>IN</i> et <i>MI</i> + <i>IN</i> = <i>MN</i> = 10, donc <i>MI</i> = 10 : 2 = 5 cm.'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'<i>I</i> est le milieu de [<i>AB</i>] et <i>AB</i> = 14 cm. Calcule <i>AI</i>.',a:7,calc:'14/2',e:'<i>I</i> est le milieu : <i>AI</i> = <i>AB</i> : 2 = 14 : 2 = 7 cm.'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'<i>I</i> est le milieu de [<i>AB</i>] et <i>AI</i> = 6 cm. Calcule <i>AB</i>.',a:12,calc:'6*2',e:'<i>AI</i> = <i>IB</i> = 6 cm, donc <i>AB</i> = 6 + 6 = 12 cm.'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'<i>I</i> est le milieu de [<i>MN</i>] et <i>IN</i> = 3,5 cm. Calcule <i>MN</i>.',a:7,calc:'3.5*2',e:'<i>MI</i> = <i>IN</i> = 3,5 cm, donc <i>MN</i> = 3,5 + 3,5 = 7 cm.'});
+add({ch:4,k:'Cours',t:'vf',q:'Dire que <i>I</i> est équidistant de <i>M</i> et <i>N</i> signifie que <i>MI</i> = <i>IN</i>.',a:true,e:'Vrai. Vocabulaire du cours : on dit aussi que le point <i>I</i> est équidistant de <i>M</i> et <i>N</i>.'});
+add({ch:4,k:'Cours',t:'vf',q:'Si <i>MI</i> = <i>IN</i>, alors <i>I</i> est forcément le milieu du segment [<i>MN</i>].',a:false,e:'Faux. Le milieu doit aussi appartenir au segment [<i>MN</i>]. Un point peut être à égale distance de <i>M</i> et de <i>N</i> sans être sur le segment.'});
+// Cercle (figures)
+add({ch:4,k:'Cours',t:'qcm',q:'Un <b>cercle</b> de centre <i>O</i> et de rayon <i>r</i> est…',c:['l’ensemble de tous les points situés à la même distance <i>r</i> du point <i>O</i>','l’ensemble de tous les points situés à une distance inférieure ou égale à <i>r</i> du point <i>O</i>','un segment qui passe par <i>O</i>','un point situé à <i>r</i> de <i>O</i>'],a:0,e:'Définition du cours : un cercle de centre <i>O</i> est formé par tous les points situés à la même distance <i>r</i> du point <i>O</i>.'});
+add({ch:4,k:'Cours',t:'qcm',q:'Un <b>rayon</b> d’un cercle est…',c:['un segment qui relie un point du cercle au centre','un segment qui relie deux points du cercle','une corde qui passe par le centre','la longueur du tour du cercle'],a:0,e:'Définition du cours : un rayon est un segment qui relie un point du cercle au centre du cercle.'});
+add({ch:4,k:'Cours',t:'qcm',q:'Une <b>corde</b> d’un cercle est…',c:['un segment qui relie deux points du cercle','un segment qui relie un point du cercle au centre','le double du rayon','un point du cercle'],a:0,e:'Définition du cours : une corde est un segment qui relie deux points du cercle.'});
+add({ch:4,k:'Cours',t:'qcm',q:'Un <b>diamètre</b> d’un cercle est…',c:['une corde qui passe par le centre du cercle','un segment qui relie le centre à un point du cercle','une corde qui ne passe pas par le centre','la moitié du rayon'],a:0,e:'Définition du cours : un diamètre est une corde qui passe par le centre du cercle.'});
+var CI = {};
+function ciQ(seg,hi,ans,why){
+  add({ch:4,k:'Figure',t:'qcm',fig:'ci',g:CI,hi:hi,q:'Sur la figure, le segment '+seg+' est…',c:['une corde qui ne passe pas par le centre','un diamètre','un rayon','une droite'],a:ans,e:why});
+}
+ciQ('[<i>AB</i>]',['A','B'],0,'[<i>AB</i>] relie deux points du cercle mais ne passe pas par le centre <i>O</i> : c’est une corde (qui n’est pas un diamètre).');
+ciQ('[<i>CD</i>]',['C','D'],1,'[<i>CD</i>] relie deux points du cercle et passe par le centre <i>O</i> : c’est un diamètre.');
+ciQ('[<i>OE</i>]',['E','O'],2,'[<i>OE</i>] relie le centre <i>O</i> à un point <i>E</i> du cercle : c’est un rayon.');
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'Un cercle a pour rayon 3 cm. Quelle est la longueur de son diamètre ?',a:6,calc:'2*3',e:'Propriété du cours : le diamètre est le double du rayon : 2 × 3 = 6 cm.'});
+add({ch:4,k:'Calcul',t:'num',unit:'cm',q:'Un cercle a un diamètre de 14 cm. Quelle est la longueur de son rayon ?',a:7,calc:'14/2',e:'Le diamètre est le double du rayon : le rayon vaut 14 : 2 = 7 cm.'});
+add({ch:4,k:'Cours',t:'vf',q:'La longueur d’un diamètre est supérieure ou égale à la longueur de n’importe quelle corde du même cercle.',a:true,e:'Vrai. Propriété du cours : la longueur d’un diamètre est supérieure ou égale à celle d’une corde.'});
+add({ch:4,k:'Cours',t:'vf',q:'La longueur d’un diamètre est le triple de celle d’un rayon.',a:false,e:'Faux : le diamètre est le <b>double</b> du rayon.'});
+add({ch:4,k:'Calcul',t:'qcm',q:'<i>O</i> est le centre d’un cercle de rayon 3 cm et <i>OE</i> = 2 cm. Le point <i>E</i> appartient-il au cercle ?',c:['Non, car <i>OE</i> ≠ 3 cm','Oui, car <i>OE</i> &lt; 3 cm','Oui, car <i>OE</i> = 2 cm','On ne peut pas savoir'],a:0,e:'Un point appartient au cercle si sa distance au centre est exactement égale au rayon. Ici <i>OE</i> = 2 cm ≠ 3 cm.'});
+// Disque
+add({ch:4,k:'Cours',t:'qcm',q:'Un <b>disque</b> de centre <i>O</i> et de rayon <i>r</i> est…',c:['l’ensemble des points situés à une distance inférieure ou égale à <i>r</i> du point <i>O</i>','l’ensemble des points situés à la même distance <i>r</i> du point <i>O</i>','un segment de longueur <i>r</i>','l’ensemble des points situés à une distance supérieure à <i>r</i>'],a:0,e:'Définition du cours : un disque est formé de tous les points situés à une distance inférieure ou égale à <i>r</i> du centre. (Le cercle, lui, n’est que le « bord ».)'});
+add({ch:4,k:'Calcul',t:'qcm',q:'Cercle et disque de centre <i>O</i> et de rayon 3 cm. On a <i>OA</i> = 2 cm. Le point <i>A</i> appartient…',c:['au disque mais pas au cercle','au cercle mais pas au disque','au cercle et au disque','ni au cercle ni au disque'],a:0,e:'<i>OA</i> = 2 cm ⩽ 3 cm : <i>A</i> est dans le disque. Mais <i>OA</i> ≠ 3 cm : <i>A</i> n’est pas sur le cercle.'});
+add({ch:4,k:'Calcul',t:'qcm',q:'Cercle et disque de centre <i>O</i> et de rayon 3 cm. On a <i>OB</i> = 3 cm. Le point <i>B</i> appartient…',c:['au cercle et au disque','au disque mais pas au cercle','au cercle mais pas au disque','ni au cercle ni au disque'],a:0,e:'<i>OB</i> = 3 cm : <i>B</i> est sur le cercle, et comme 3 ⩽ 3, il est aussi dans le disque.'});
+add({ch:4,k:'Calcul',t:'qcm',q:'Cercle et disque de centre <i>O</i> et de rayon 3 cm. On a <i>OC</i> = 5 cm. Le point <i>C</i> appartient…',c:['ni au cercle ni au disque','au disque mais pas au cercle','au cercle mais pas au disque','au cercle et au disque'],a:0,e:'<i>OC</i> = 5 cm &gt; 3 cm : <i>C</i> est à l’extérieur, donc il n’appartient ni au disque ni au cercle.'});
+add({ch:4,k:'Cours',t:'vf',q:'Tout point du cercle appartient aussi au disque de même centre et de même rayon.',a:true,e:'Vrai : un point du cercle est à la distance exacte <i>r</i> du centre, et <i>r</i> ⩽ <i>r</i>.'});
+add({ch:4,k:'Cours',t:'vf',q:'Tout point du disque appartient aussi au cercle de même centre et de même rayon.',a:false,e:'Faux : un point à l’intérieur du disque (distance &lt; <i>r</i>) n’est pas sur le cercle.'});
+// Le sentier
+var SN = {};
+add({ch:4,k:'Problème',t:'num',unit:'cm',fig:'sn',g:SN,hi:[],q:'Sur une carte, un sentier est représenté par le segment [<i>AB</i>] de 12 cm. Les points <i>C</i>, <i>D</i> et <i>E</i> le partagent en 4 parties de même longueur (dans l’ordre <i>A</i>, <i>C</i>, <i>D</i>, <i>E</i>, <i>B</i>). Quelle est la longueur de chaque partie ?',a:3,calc:'12/4',e:'12 : 4 = 3 cm.'});
+add({ch:4,k:'Problème',t:'frac',irr:true,fig:'sn',g:SN,hi:['D'],a:'1/2',q:'Même sentier ([<i>AB</i>] = 12 cm, 4 parties égales). Quelle fraction de [<i>AB</i>] représente [<i>AD</i>] ? (simplifie-la)',e:'[<i>AD</i>] contient 2 parties sur 4 : '+F(2,4)+' = '+F(1,2)+'.'});
+add({ch:4,k:'Problème',t:'qcm',fig:'sn',g:SN,hi:['D'],q:'Même sentier. Pourquoi <i>D</i> est-il le milieu de [<i>AB</i>] ?',c:['Car <i>D</i> appartient à [<i>AB</i>] et <i>AD</i> = <i>DB</i> = 6 cm','Car <i>AD</i> = 3 cm','Car <i>D</i> est le point du milieu de la figure','Car <i>AD</i> + <i>DB</i> = 12 cm uniquement'],a:0,e:'<i>AD</i> = 2 × 3 = 6 cm et <i>DB</i> = 2 × 3 = 6 cm, avec <i>D</i> sur [<i>AB</i>] : <i>D</i> est à la même distance de <i>A</i> et de <i>B</i>, c’est le milieu.'});
+add({ch:4,k:'Problème',t:'num',unit:'cm',fig:'sn',g:SN,hi:['E'],q:'Même sentier. Calcule la longueur <i>AE</i>.',a:9,calc:'3*3',e:'[<i>AE</i>] contient 3 parties de 3 cm : <i>AE</i> = 3 × 3 = 9 cm.'});
+add({ch:4,k:'Problème',t:'frac',irr:true,fig:'sn',g:SN,hi:['E'],a:'3/4',q:'Même sentier. Quelle fraction de [<i>AB</i>] représente [<i>AE</i>] ?',e:'[<i>AE</i>] contient 3 parties sur 4 : '+F(3,4)+'. (Aussi : 9 cm sur 12 cm, '+F(9,12)+' = '+F(3,4)+'.)'});
+add({ch:4,k:'Problème',t:'qcm',fig:'sn',g:SN,hi:['A','B'],q:'Même sentier. On considère le cercle de centre <i>D</i> et de rayon 6 cm. Que peut-on dire des points <i>A</i> et <i>B</i> et du segment [<i>AB</i>] ?',c:['<i>A</i> et <i>B</i> appartiennent au cercle et [<i>AB</i>] en est un diamètre','<i>A</i> et <i>B</i> n’appartiennent pas au cercle','[<i>AB</i>] est un rayon du cercle','<i>A</i> appartient au cercle mais pas <i>B</i>'],a:0,e:'<i>DA</i> = <i>DB</i> = 6 cm = le rayon : <i>A</i> et <i>B</i> sont sur le cercle. [<i>AB</i>] est une corde qui passe par le centre <i>D</i> : c’est un diamètre.'});
+add({ch:4,k:'Problème',t:'qcm',fig:'sn',g:SN,hi:['E'],q:'Même sentier, cercle de centre <i>D</i> et de rayon 6 cm. On a <i>DE</i> = 3 cm. Le point <i>E</i> appartient…',c:['au disque mais pas au cercle','au cercle mais pas au disque','au cercle et au disque','ni au cercle ni au disque'],a:0,e:'<i>DE</i> = 3 cm ⩽ 6 cm : <i>E</i> est dans le disque ; <i>DE</i> ≠ 6 cm : il n’est pas sur le cercle.'});
+return Q;
+})();
 
 </script>
 <script>
 (function(){
 'use strict';
 var SERIES = {
+  six2:{lv:'6e',short:'DS2',title:'Révision du DS2',sub:'Fractions (1) · Distance',date:'DS du 10 décembre 2026',bank:BANK6,cours:COURS.six2,
+       ch:{3:{t:'Chapitre 3',n:'Fractions (1)'},4:{t:'Chapitre 4',n:'Distance'}}},
   ds2:{lv:'5e',short:'DS2',title:'Révision du DS2',sub:'Puissances · Angles · Calcul littéral (1)',date:'DS du 23 novembre 2026',bank:BANK5,cours:COURS.ds2,
        ch:{3:{t:'Chapitre 3',n:'Puissances'},4:{t:'Chapitre 4',n:'Angles'},5:{t:'Chapitre 5',n:'Calcul littéral (1)'}}},
   ds3:{lv:'4e',short:'DS3',title:'Révision du DS3',sub:'Calcul littéral (1) · Translation · Racine carrée',date:'DS du 30 novembre 2026',bank:BANK4,cours:COURS.ds3,
        ch:{5:{t:'Chapitre 5',n:'Calcul littéral (1)'},6:{t:'Chapitre 6',n:'Translation'},7:{t:'Chapitre 7',n:'Racine carrée'}}}
 };
-var LEVELS = {'5e':['ds2'],'4e':['ds3']};
+var LEVELS = {'6e':['six2'],'5e':['ds2'],'4e':['ds3']};
 Object.keys(SERIES).forEach(function(k){
   var S = SERIES[k]; S.id = k; S.chs = Object.keys(S.ch).map(Number);
   S.bank.forEach(function(q,i){ q.id = k+':'+(i+1); });
@@ -602,7 +790,7 @@ function nav(name){ if(location.hash==='#'+name){ route(); } else { location.has
 /* ---------- vérification des réponses ---------- */
 function normNum(s){
   s = String(s).toLowerCase().replace(/[\s  ]/g,'').replace(/[−–—]/g,'-').replace(',','.');
-  s = s.replace(/(°|cm[²³23]?|cm)$/,'');
+  s = s.replace(/(°|%|cm[²³23]?|cm|g)$/,'');
   return /^-?\d+(\.\d+)?$/.test(s) ? parseFloat(s) : NaN;
 }
 function normExpr(s){
@@ -642,6 +830,17 @@ function check(q, raw){
     var v = normNum(raw);
     if(isNaN(v)) return {ok:false, msg:'Écris un nombre (par exemple 36).'};
     return {ok: Math.abs(v-q.a)<1e-9};
+  }
+  if(q.t==='frac'){
+    var rs = String(raw).replace(/[\s\u00a0\u202f]/g,'').replace(/[÷:]/g,'/').replace(/[−–—]/g,'-');
+    var mm = /^(\d+)\/(\d+)$/.exec(rs), fn, fd;
+    if(mm){ fn = +mm[1]; fd = +mm[2]; if(fd===0) return {ok:false, msg:'Le dénominateur ne peut pas être 0.'}; }
+    else { var iv = normNum(rs); if(!isNaN(iv) && iv===Math.floor(iv) && iv>=0){ fn = iv; fd = 1; } else return {ok:false, msg:'Écris une fraction, par exemple 3/4.'}; }
+    var tp = String(q.a).split('/'), tn = +tp[0], td = tp.length>1 ? +tp[1] : 1;
+    if(fn*td !== tn*fd) return {ok:false};
+    if(q.den!==undefined && fd!==q.den) return {ok:false, msg:'Ta valeur est bonne, mais on demande une fraction de dénominateur '+q.den+'.'};
+    if(q.irr){ var gg = (function g(a,b){ return b?g(b,a%b):a; })(fn,fd); if(gg>1 && fn!==0) return {ok:false, msg:'Ta fraction est juste, mais elle peut encore être simplifiée.'}; }
+    return {ok:true};
   }
   if(q.t==='pow'){
     var p = String(raw).toLowerCase().replace(/[\s ]/g,'').replace(/²/g,'^2').replace(/³/g,'^3').replace('**','^');
@@ -717,8 +916,55 @@ function figGrid(g, hi){
   });
   return o + '</svg>';
 }
+function figLine(g, hi){
+  hi = hi||[];
+  var x0 = 26, x1 = 346, total = g.N*g.p, st = (x1-x0)/total, y = 56, i;
+  var o = '<svg viewBox="0 0 380 100" role="img" aria-label="Demi-droite graduée avec des points">';
+  o += '<line class="ln" x1="'+(x0-10)+'" y1="'+y+'" x2="372" y2="'+y+'"/><polyline class="ln" points="364,50 372,'+y+' 364,62"/>';
+  for(i=0;i<=total;i++){
+    var x = x0+i*st, major = i%g.p===0;
+    o += '<line class="ln" style="stroke-width:'+(major?2:1.4)+'" x1="'+x+'" y1="'+(y-(major?9:5))+'" x2="'+x+'" y2="'+(y+(major?9:5))+'"/>';
+    if(major) o += '<text class="tx" style="font-style:normal" x="'+(x-4)+'" y="'+(y+28)+'">'+(i/g.p)+'</text>';
+  }
+  Object.keys(g.pts).forEach(function(n){
+    var x = x0+g.pts[n]*st, on = hi.indexOf(n)>=0;
+    o += '<circle cx="'+x+'" cy="'+y+'" r="'+(on?7:5)+'" style="fill:'+(on?'var(--hl)':'var(--accent)')+';stroke:var(--ink);stroke-width:1.5"/><text class="tx" x="'+(x-5)+'" y="'+(y-16)+'">'+n+'</text>';
+  });
+  return o + '</svg>';
+}
+function figCircle(g, hi){
+  hi = hi||[];
+  var cx = 190, cy = 110, r = 85;
+  function P(a){ return [cx + r*Math.cos(a*Math.PI/180), cy - r*Math.sin(a*Math.PI/180)]; }
+  var pts = {A:130,B:50,C:200,D:20,E:290}, xy = {}; Object.keys(pts).forEach(function(k){ xy[k] = P(pts[k]); });
+  var o = '<svg viewBox="0 0 380 220" role="img" aria-label="Cercle de centre O avec des segments [AB], [CD] et [OE]">';
+  o += '<circle class="ln" cx="'+cx+'" cy="'+cy+'" r="'+r+'"/>';
+  [['A','B'],['C','D']].forEach(function(s){ o += '<line class="ln" style="stroke:'+((hi.indexOf(s[0])>=0)?'var(--accent)':'var(--ink)')+';stroke-width:'+((hi.indexOf(s[0])>=0)?3.5:2)+'" x1="'+xy[s[0]][0]+'" y1="'+xy[s[0]][1]+'" x2="'+xy[s[1]][0]+'" y2="'+xy[s[1]][1]+'"/>'; });
+  o += '<line class="ln" style="stroke:'+((hi.indexOf('E')>=0)?'var(--accent)':'var(--ink)')+';stroke-width:'+((hi.indexOf('E')>=0)?3.5:2)+'" x1="'+cx+'" y1="'+cy+'" x2="'+xy.E[0]+'" y2="'+xy.E[1]+'"/>';
+  Object.keys(xy).forEach(function(k){
+    var a = pts[k], lx = cx + (r+16)*Math.cos(a*Math.PI/180) - 5, ly = cy - (r+16)*Math.sin(a*Math.PI/180) + 5;
+    o += '<circle cx="'+xy[k][0]+'" cy="'+xy[k][1]+'" r="3.5" style="fill:var(--ink)"/><text class="tx" x="'+lx+'" y="'+ly+'">'+k+'</text>';
+  });
+  o += '<circle cx="'+cx+'" cy="'+cy+'" r="3.5" style="fill:var(--ink)"/><text class="tx" x="'+(cx+6)+'" y="'+(cy+18)+'">O</text>';
+  return o + '</svg>';
+}
+function figPath(g, hi){
+  hi = hi||[];
+  var names = ['A','C','D','E','B'], x0 = 34, st = 78, y = 50;
+  var o = '<svg viewBox="0 0 380 100" role="img" aria-label="Segment AB partagé en quatre parties égales par les points C, D et E">';
+  o += '<line class="ln" x1="'+x0+'" y1="'+y+'" x2="'+(x0+4*st)+'" y2="'+y+'"/>';
+  names.forEach(function(n,i){
+    var x = x0+i*st, on = hi.indexOf(n)>=0;
+    o += '<line class="ln" x1="'+x+'" y1="'+(y-8)+'" x2="'+x+'" y2="'+(y+8)+'"/><circle cx="'+x+'" cy="'+y+'" r="'+(on?7:4)+'" style="fill:'+(on?'var(--hl)':'var(--ink)')+';stroke:var(--ink);stroke-width:1.5"/><text class="tx" x="'+(x-5)+'" y="'+(y-18)+'">'+n+'</text>';
+  });
+  return o + '</svg>';
+}
 function figure(q, hi){
-  return q.fig==='tr' ? figGrid(q.g, hi) : figAngles(q.fig, hi);
+  if(q.fig==='tr') return figGrid(q.g, hi);
+  if(q.fig==='dg') return figLine(q.g, hi);
+  if(q.fig==='ci') return figCircle(q.g, hi);
+  if(q.fig==='sn') return figPath(q.g, hi);
+  return figAngles(q.fig, hi);
 }
 
 /* ---------- vues ---------- */
@@ -744,7 +990,7 @@ function viewHome(){
     '<section class="hero"><p class="eyebrow">Par Madame Hechaichi</p><h1>Révision <mark>DS</mark></h1>'+
     '<p class="lede">Choisis ta classe, puis ta série de questions. Réponds, vérifie avec le cours, recommence.</p></section>'+
     '<div class="levels">'+
-    '<button class="level soon" data-go="6e"><span class="big">6<sup>e</sup></span><span><span class="pill wait">Bientôt</span><br><span class="sub">Séries à venir</span></span></button>'+
+    '<button class="level open" data-go="6e"><span class="big">6<sup>e</sup></span><span><span class="pill ok">Disponible</span><br><span class="sub">1 série · '+SERIES.six2.bank.length+' questions</span></span></button>'+
     '<button class="level open" data-go="5e"><span class="big">5<sup>e</sup></span><span><span class="pill ok">Disponible</span><br><span class="sub">1 série · '+n5+' questions</span></span></button>'+
     '<button class="level open" data-go="4e"><span class="big">4<sup>e</sup></span><span><span class="pill ok">Disponible</span><br><span class="sub">1 série · '+n4+' questions</span></span></button>'+
     '</div>';
@@ -863,9 +1109,9 @@ function viewQuestion(){
   } else if(q.t==='vf'){
     html += '<div class="choices vf" role="group" aria-label="Vrai ou faux"><button class="opt" data-k="1" aria-pressed="false">Vrai</button><button class="opt" data-k="0" aria-pressed="false">Faux</button></div>';
   } else {
-    var ph = q.t==='num' ? 'ex. 36' : (q.t==='pow' ? 'ex. 4^2 ou 4²' : 'ta réponse');
+    var ph = q.t==='num' ? 'ex. 36' : (q.t==='pow' ? 'ex. 4^2 ou 4²' : (q.t==='frac' ? 'ex. 3/4' : 'ta réponse'));
     html += '<div class="field"><label class="muted" for="ans" style="width:100%;font-size:15px">Ta réponse</label><input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+ph+'">'+(q.unit?'<span class="unit">'+q.unit+'</span>':'')+'</div>';
-    var keys = q.t==='num' ? ['−'] : (q.t==='pow' ? ['²','³','^'] : ['×','²','(',')','+','−']);
+    var keys = q.t==='num' ? ['−'] : (q.t==='pow' ? ['²','³','^'] : (q.t==='frac' ? ['/'] : ['×','²','(',')','+','−']));
     html += '<div class="keys" aria-label="Touches utiles">'+keys.map(function(k){return '<button type="button" data-key="'+k+'" aria-label="Insérer '+k+'">'+k+'</button>';}).join('')+'</div>';
   }
   html += '</div><div class="actions" id="actions"><button class="btn" id="check">Valider</button><button class="btn ghost" id="skip">Je ne sais pas</button></div><div id="fb" aria-live="polite"></div></article>';
@@ -897,6 +1143,7 @@ function answerText(q){
   if(q.t==='qcm') return q.c[q.a];
   if(q.t==='vf') return q.a ? 'Vrai' : 'Faux';
   if(q.t==='num') return fr(q.a)+(q.unit?' '+q.unit:'');
+  if(q.t==='frac'){ var pp = String(q.a).split('/'); return pp.length>1 ? '<span class="fr"><span>'+pp[0]+'</span><span>'+pp[1]+'</span></span>' : pp[0]; }
   return q.show;
 }
 function submit(skipped){
@@ -991,11 +1238,11 @@ function route(){
   clearTimer();
   var r = (location.hash||'').replace('#','');
   var m;
-  if(r==='6e') return viewSoon('6e');
+  if(r==='6e') return viewLevel('6e');
   if(r==='5e') return viewLevel('5e');
   if(r==='4e') return viewLevel('4e');
-  if((m = /^(ds\d)$/.exec(r)) && SERIES[m[1]]){ cur = SERIES[m[1]]; return viewSetup(); }
-  if((m = /^(ds\d)c(\d)$/.exec(r)) && SERIES[m[1]] && SERIES[m[1]].ch[m[2]]){ cur = SERIES[m[1]]; return viewCours(parseInt(m[2],10)); }
+  if((m = /^([a-z0-9]+)$/.exec(r)) && SERIES[m[1]]){ cur = SERIES[m[1]]; return viewSetup(); }
+  if((m = /^([a-z0-9]+)c(\d)$/.exec(r)) && SERIES[m[1]] && SERIES[m[1]].ch[m[2]]){ cur = SERIES[m[1]]; return viewCours(parseInt(m[2],10)); }
   return viewHome();
 }
 window.addEventListener('hashchange', function(){ session = null; route(); });
