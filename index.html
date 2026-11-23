@@ -192,6 +192,8 @@ footer{margin-top:40px;font-size:14px;color:var(--muted)}
 .ticket .big-score small{color:inherit;opacity:.7}
 .ticket .t3{font-weight:700;margin-top:4px}
 .field.who{max-width:420px;margin:0 auto}
+.keys .kvar{font-family:Georgia,'Times New Roman',serif;font-size:24px;min-width:52px}
+.keys .ktimes{font-size:24px;font-weight:700;min-width:52px}
 .note{margin:12px 0 0;padding:10px 14px;border-left:5px solid var(--hl);background:var(--surface);border-radius:0 10px 10px 0;font-size:16px}
 .namebox{max-width:none;margin:18px 0 0}
 .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 .18em;font-size:.95em}
@@ -1112,7 +1114,16 @@ function viewQuestion(){
     var ph = q.t==='num' ? 'ex. 36' : (q.t==='pow' ? 'ex. 4^2 ou 4²' : (q.t==='frac' ? 'ex. 3/4' : 'ta réponse'));
     html += '<div class="field"><label class="muted" for="ans" style="width:100%;font-size:15px">Ta réponse</label><input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+ph+'">'+(q.unit?'<span class="unit">'+q.unit+'</span>':'')+'</div>';
     var keys = q.t==='num' ? ['−'] : (q.t==='pow' ? ['²','³','^'] : (q.t==='frac' ? ['/'] : ['×','²','(',')','+','−']));
-    html += '<div class="keys" aria-label="Touches utiles">'+keys.map(function(k){return '<button type="button" data-key="'+k+'" aria-label="Insérer '+k+'">'+k+'</button>';}).join('')+'</div>';
+    var vars = [];
+    if(q.t==='expr'){
+      var found = (String(q.q).match(/<i>([a-z])<\/i>/g)||[]).map(function(t){return t.charAt(3);}).concat((String(q.a).replace(/[^a-z]/g,'')).split(''));
+      found.forEach(function(v){ if(v && vars.indexOf(v)<0) vars.push(v); });
+      if(vars.indexOf('x')<0) vars.unshift('x');
+      vars.sort(function(a,b){ return a==='x'?-1:(b==='x'?1:(a<b?-1:1)); });
+    }
+    html += '<div class="keys" aria-label="Touches utiles">'+
+      vars.map(function(v){return '<button type="button" class="kvar" data-key="'+v+'" aria-label="Insérer la lettre '+v+'"><i>'+v+'</i></button>';}).join('')+
+      keys.map(function(k){return '<button type="button" '+(k==='×'?'class="ktimes" aria-label="Insérer le signe multiplier ×"':'aria-label="Insérer '+k+'"')+' data-key="'+k+'">'+k+'</button>';}).join('')+'</div>';
   }
   html += '</div><div class="actions" id="actions"><button class="btn" id="check">Valider</button><button class="btn ghost" id="skip">Je ne sais pas</button></div><div id="fb" aria-live="polite"></div></article>';
   app.innerHTML = html;
